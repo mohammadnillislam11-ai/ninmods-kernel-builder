@@ -557,17 +557,17 @@
 
     .line 275
     .local v2, "cardBg":Landroid/graphics/drawable/GradientDrawable;
-    const v3, -0xe1e5c6
+    const v3, -0xf1e8d6
 
     invoke-virtual {v2, v3}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
 
     .line 276
-    const/high16 v3, 0x41400000    # 12.0f
+    const/high16 v3, 0x41200000    # 10.0f
 
     invoke-virtual {v2, v3}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
 
     .line 277
-    const v3, -0xa1ca4f
+    const v3, -0xddc9b7
 
     invoke-virtual {v2, v1, v3}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
 
@@ -612,7 +612,7 @@
     invoke-virtual {v0, p1}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
 
     .line 314
-    const v1, -0xff0100
+    const v1, -0xf4ede0
 
     invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextColor(I)V
 
@@ -642,12 +642,12 @@
 
     .line 320
     .local v1, "shape":Landroid/graphics/drawable/GradientDrawable;
-    const v2, -0x9100
+    const v2, -0xff2d01
 
     invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
 
     .line 321
-    const/high16 v2, 0x41f00000    # 30.0f
+    const/high16 v2, 0x41200000    # 10.0f
 
     invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
 
@@ -673,7 +673,7 @@
     invoke-virtual {v0, p1}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
 
     .line 298
-    const v1, -0xff0100
+    const v1, -0xf4ede0
 
     invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextColor(I)V
 
@@ -703,20 +703,12 @@
 
     .line 304
     .local v1, "shape":Landroid/graphics/drawable/GradientDrawable;
-    const v2, -0x1000000
-
-    invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+    invoke-virtual {v1, p2}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
 
     .line 305
-    const/4 v2, 0x0
+    const/high16 v2, 0x41200000    # 10.0f
 
     invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
-
-    const/4 v2, 0x1
-
-    const v3, -0xff0100
-
-    invoke-virtual {v1, v2, v3}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
 
     .line 306
     invoke-virtual {v0, v1}, Landroid/widget/Button;->setBackground(Landroid/graphics/drawable/Drawable;)V
@@ -2707,7 +2699,7 @@
     invoke-virtual {v0, v2, v3, v2, v2}, Landroid/widget/LinearLayout;->setPadding(IIII)V
 
     .line 173
-    const v2, -0x1000000
+    const v2, -0xf4ede0
 
     invoke-virtual {v0, v2}, Landroid/widget/LinearLayout;->setBackgroundColor(I)V
 
@@ -2724,7 +2716,7 @@
 
     move-result-object v3
 
-    const-string v4, "ghost_logo"
+    const-string v4, "nin_logo"
 
     const-string v5, "drawable"
 
@@ -2742,7 +2734,7 @@
 
     const/4 v4, -0x1
 
-    const/16 v5, 0xf0
+    const/16 v5, 0x64
 
     invoke-direct {v3, v4, v5}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
 
@@ -2761,7 +2753,7 @@
     invoke-virtual {v2, v3}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
     .line 177
-    const v3, -0xff0100
+    const v3, -0xff2d01
 
     invoke-virtual {v2, v3}, Landroid/widget/TextView;->setTextColor(I)V
 
@@ -2787,12 +2779,12 @@
 
     .line 183
     .local v1, "titleBg":Landroid/graphics/drawable/GradientDrawable;
-    const v3, -0x1000000
+    const v3, -0xf1e8d6
 
     invoke-virtual {v1, v3}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
 
     .line 184
-    const/high16 v4, 0x41a00000    # 20.0f
+    const/high16 v4, 0x41200000    # 20.0f
 
     invoke-virtual {v1, v4}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
 
@@ -2843,7 +2835,7 @@
     .line 194
     iget-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
 
-    const v7, -0xff0078
+    const v7, -0xff198a
 
     invoke-virtual {v6, v7}, Landroid/widget/TextView;->setTextColor(I)V
 
@@ -2916,7 +2908,7 @@
     .line 206
     iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
 
-    const/16 v10, -0x58da
+    const v10, -0xff2d01
 
     invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextColor(I)V
 
@@ -3023,9 +3015,9 @@
     invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setWeightSum(F)V
 
     .line 225
-    const-string v9, "QX Auto Drivers Load"
+    const-string v9, "LOAD QX (RAM)"
 
-    const v10, -0xa1ca4f
+    const v10, -0xff198a
 
     invoke-direct {p0, v9, v10}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
 
@@ -3034,9 +3026,9 @@
     iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
 
     .line 226
-    const-string v9, "RT Auto Drivers Load"
+    const-string v9, "LOAD RT (KERNEL)"
 
-    const v10, -0x84e05e
+    const v10, -0xff2d01
 
     invoke-direct {p0, v9, v10}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
 
@@ -3111,12 +3103,12 @@
 
     .line 244
     .local v10, "terminalLabel":Landroid/widget/TextView;
-    const-string v11, ">>> Output Terminal"
+    const-string v11, ">>> TERMINAL OUTPUT"
 
     invoke-virtual {v10, v11}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
     .line 245
-    const v11, -0xff0100
+    const v11, -0xff2d01
 
     invoke-virtual {v10, v11}, Landroid/widget/TextView;->setTextColor(I)V
 
@@ -3154,7 +3146,7 @@
     .line 252
     iget-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
 
-    const v13, -0xff0100
+    const v13, -0xff198a
 
     invoke-virtual {v6, v13}, Landroid/widget/TextView;->setTextColor(I)V
 
@@ -3186,7 +3178,7 @@
 
     .line 258
     .local v6, "terminalBg":Landroid/graphics/drawable/GradientDrawable;
-    const v3, -0x1000000
+    const v3, -0xf8f3ea
 
     invoke-virtual {v6, v3}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
 
@@ -3197,7 +3189,7 @@
 
     const/4 v13, 0x2
 
-    const v14, -0xff0100
+    const v14, -0xff2d01
 
     invoke-virtual {v6, v13, v14}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
 
