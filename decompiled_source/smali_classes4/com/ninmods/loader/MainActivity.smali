@@ -185,6 +185,22 @@
     return-void
 .end method
 
+.method public static synthetic $r8$lambda$clickUnload(Lcom/ninmods/loader/MainActivity;Landroid/view/View;)V
+    .locals 0
+
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->unloadDriver()V
+
+    return-void
+.end method
+
+.method public static synthetic $r8$lambda$executeUnload(Lcom/ninmods/loader/MainActivity;)V
+    .locals 0
+
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->executeUnloadDriver()V
+
+    return-void
+.end method
+
 .method public constructor <init>()V
     .locals 1
 
@@ -2781,6 +2797,72 @@
     return-void
 .end method
 
+.method private unloadDriver()V
+    .locals 3
+
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->clearTerminal()V
+
+    const-string v0, "Unloading driver..."
+
+    invoke-direct {p0, v0}, Lcom/ninmods/loader/MainActivity;->appendOutput(Ljava/lang/String;)V
+
+    new-instance v0, Ljava/lang/Thread;
+
+    new-instance v1, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaUnload;
+
+    invoke-direct {v1, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaUnload;-><init>(Lcom/ninmods/loader/MainActivity;)V
+
+    invoke-direct {v0, v1}, Ljava/lang/Thread;-><init>(Ljava/lang/Runnable;)V
+
+    invoke-virtual {v0}, Ljava/lang/Thread;->start()V
+
+    return-void
+.end method
+
+.method private executeUnloadDriver()V
+    .locals 4
+
+    :try_start_0
+    invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
+
+    move-result-object v0
+
+    const-string v1, "su"
+
+    const-string v2, "-c"
+
+    const-string v3, "rmmod mem_tool 2>/dev/null; rmmod health_storage_service_alloc 2>/dev/null; rmmod BYNb 2>/dev/null; rmmod sched_debug 2>/dev/null; for m in $(cat /proc/modules 2>/dev/null | awk '{print $1}'); do case \"$m\" in *mem_tool*|*driver*|*rt*|*sched_debug*|*BYNb*) rmmod \"$m\" 2>/dev/null;; esac; done; rm -f /dev/health_storage_service_alloc 2>/dev/null; rm -f /data/local/tmp/*.ko 2>/dev/null; pkill -f 'Driver.sh' 2>/dev/null; pkill -f 'QX' 2>/dev/null"
+
+    filled-new-array {v1, v2, v3}, [Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Ljava/lang/Runtime;->exec([Ljava/lang/String;)Ljava/lang/Process;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/lang/Process;->waitFor()I
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+
+    :catch_0
+    const-string v0, "[+] Driver unloaded successfully."
+
+    invoke-direct {p0, v0}, Lcom/ninmods/loader/MainActivity;->appendOutput(Ljava/lang/String;)V
+
+    const-string v0, "[+] Kernel device nodes cleaned up."
+
+    invoke-direct {p0, v0}, Lcom/ninmods/loader/MainActivity;->appendOutput(Ljava/lang/String;)V
+
+    new-instance v0, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaStatusReset;
+
+    invoke-direct {v0, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaStatusReset;-><init>(Lcom/ninmods/loader/MainActivity;)V
+
+    invoke-virtual {p0, v0}, Lcom/ninmods/loader/MainActivity;->runOnUiThread(Ljava/lang/Runnable;)V
+
+    return-void
+.end method
+
 .method private setupUI()V
     .locals 15
 
@@ -2867,7 +2949,7 @@
 
     invoke-direct {v2, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
 
-    const-string v3, "NINMODS KERNEL DRIVER LOADER"
+    const-string v3, "NINMODS DRIVER LOADER"
 
     invoke-virtual {v2, v3}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
@@ -3071,7 +3153,33 @@
 
     invoke-virtual {v0, v5}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    const-string v9, "LOAD KERNEL DRIVER"
+    new-instance v5, Landroid/widget/LinearLayout;
+
+    invoke-direct {v5, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+
+    const/4 v7, 0x0
+
+    invoke-virtual {v5, v7}, Landroid/widget/LinearLayout;->setOrientation(I)V
+
+    const/16 v9, 0x11
+
+    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setGravity(I)V
+
+    new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
+
+    const/4 v10, -0x1
+
+    const/4 v11, -0x2
+
+    invoke-direct {v9, v10, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+
+    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
+
+    const/high16 v9, 0x40000000    # 2.0f
+
+    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setWeightSum(F)V
+
+    const-string v9, "LOAD QX (RAM)"
 
     const v10, -0xff198a
 
@@ -3079,7 +3187,25 @@
 
     move-result-object v9
 
+    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+
+    const-string v9, "LOAD RT (KERNEL)"
+
+    const v10, -0xff2d01
+
+    invoke-direct {p0, v9, v10}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
+
+    move-result-object v9
+
     iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
+
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+
+    new-instance v10, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda4;
+
+    invoke-direct {v10, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda4;-><init>(Lcom/ninmods/loader/MainActivity;)V
+
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
     iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
 
@@ -3091,17 +3217,101 @@
 
     new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
 
-    const/4 v10, -0x1
+    const/4 v10, 0x0
 
     const/4 v11, -0x2
 
-    invoke-direct {v9, v10, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    const/high16 v12, 0x3f800000    # 1.0f
+
+    invoke-direct {v9, v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
+
+    const/4 v13, 0x6
+
+    invoke-virtual {v9, v7, v7, v13, v7}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+
+    iget-object v14, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+
+    invoke-virtual {v5, v14, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+
+    new-instance v14, Landroid/widget/LinearLayout$LayoutParams;
+
+    invoke-direct {v14, v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
+
+    invoke-virtual {v14, v13, v7, v7, v7}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
 
     iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
 
-    invoke-virtual {v0, v10, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+    invoke-virtual {v5, v10, v14}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    const/16 v6, 0xe
+    invoke-virtual {v0, v5}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
+    const/16 v6, 0x8
+
+    invoke-direct {p0, v6}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
+
+    move-result-object v10
+
+    invoke-virtual {v0, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
+    new-instance v9, Landroid/widget/Button;
+
+    invoke-direct {v9, p0}, Landroid/widget/Button;-><init>(Landroid/content/Context;)V
+
+    const-string v10, "UNLOAD DRIVER"
+
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
+
+    const v10, -0xf4ede0
+
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setTextColor(I)V
+
+    const/high16 v10, 0x41600000    # 14.0f
+
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setTextSize(F)V
+
+    sget-object v10, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+
+    const/4 v11, 0x1
+
+    invoke-virtual {v9, v10, v11}, Landroid/widget/Button;->setTypeface(Landroid/graphics/Typeface;I)V
+
+    const/16 v10, 0x19
+
+    const/16 v11, 0x10
+
+    invoke-virtual {v9, v10, v11, v10, v11}, Landroid/widget/Button;->setPadding(IIII)V
+
+    new-instance v10, Landroid/graphics/drawable/GradientDrawable;
+
+    invoke-direct {v10}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
+
+    const v11, -0xc4d0
+
+    invoke-virtual {v10, v11}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+
+    const/high16 v11, 0x41200000    # 10.0f
+
+    invoke-virtual {v10, v11}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
+
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setBackground(Landroid/graphics/drawable/Drawable;)V
+
+    new-instance v10, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaUnloadBtn;
+
+    invoke-direct {v10, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaUnloadBtn;-><init>(Lcom/ninmods/loader/MainActivity;)V
+
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+
+    new-instance v10, Landroid/widget/LinearLayout$LayoutParams;
+
+    const/4 v11, -0x1
+
+    const/4 v12, -0x2
+
+    invoke-direct {v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+
+    invoke-virtual {v0, v9, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+
+    const/16 v6, 0xc
 
     invoke-direct {p0, v6}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
 
@@ -3112,8 +3322,6 @@
     new-instance v10, Landroid/widget/LinearLayout;
 
     invoke-direct {v10, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
-
-    const/4 v7, 0x0
 
     invoke-virtual {v10, v7}, Landroid/widget/LinearLayout;->setOrientation(I)V
 
