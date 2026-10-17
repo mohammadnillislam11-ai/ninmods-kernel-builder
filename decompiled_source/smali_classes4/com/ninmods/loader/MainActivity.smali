@@ -2831,7 +2831,7 @@
 
     const-string v2, "-c"
 
-    const-string v3, "rmmod mem_tool 2>/dev/null; rmmod health_storage_service_alloc 2>/dev/null; rmmod BYNb 2>/dev/null; rmmod sched_debug 2>/dev/null; for m in $(cat /proc/modules 2>/dev/null | awk '{print $1}'); do case \"$m\" in *mem_tool*|*driver*|*rt*|*sched_debug*|*BYNb*) rmmod \"$m\" 2>/dev/null;; esac; done; rm -f /dev/health_storage_service_alloc 2>/dev/null; rm -f /data/local/tmp/*.ko 2>/dev/null; pkill -f 'Driver.sh' 2>/dev/null; pkill -f 'QX' 2>/dev/null"
+    const-string v3, "rmmod 5.10_A12 2>/dev/null; rmmod nh 2>/dev/null; rmmod mem_tool 2>/dev/null; rmmod health_storage_service_alloc 2>/dev/null; rmmod BYNb 2>/dev/null; rmmod sched_debug 2>/dev/null; for m in $(cat /proc/modules 2>/dev/null | awk '{print $1}'); do case \"$m\" in *5.10*|*nh*|*mem_tool*|*driver*|*rt*|*sched_debug*|*BYNb*) rmmod \"$m\" 2>/dev/null;; esac; done; rm -f /dev/health_storage_service_alloc 2>/dev/null; rm -f /data/nh.ko 2>/dev/null; rm -f /data/local/tmp/*.ko 2>/dev/null; pkill -f 'Driver.sh' 2>/dev/null; pkill -f 'QX' 2>/dev/null; pkill -f 'temp' 2>/dev/null"
 
     filled-new-array {v1, v2, v3}, [Ljava/lang/String;
 
