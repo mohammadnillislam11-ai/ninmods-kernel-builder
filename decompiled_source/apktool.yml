@@ -1,0 +1,25 @@
+!!brut.androlib.meta.MetaInfo
+apkFileName: NINMODS_Driver_Loader.apk
+compressionType: false
+doNotCompress:
+- resources.arsc
+- png
+- webp
+isFrameworkApk: false
+packageInfo:
+  forcedPackageId: '127'
+  renameManifestPackage: null
+sdkInfo:
+  minSdkVersion: '21'
+  targetSdkVersion: '35'
+sharedLibrary: false
+sparseResources: false
+unknownFiles: {}
+usesFramework:
+  ids:
+  - 1
+  tag: null
+version: 2.7.0-dirty
+versionInfo:
+  versionCode: '1'
+  versionName: '2.0'

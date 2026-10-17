@@ -1,0 +1,13 @@
+build/
+release_apk/
+*.apk
+*.idsig
+*.keystore
+decompiled_source/build/
+__pycache__/
+*.py[cod]
+.DS_Store
+/apktool.jar
+/uber-apk-signer.jar
+/Driver Loader_2.0 (1).apk
+/Kernel Driver.zip
