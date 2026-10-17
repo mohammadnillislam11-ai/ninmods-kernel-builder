@@ -2709,6 +2709,78 @@
     return-void
 .end method
 
+.method private copyTerminalOutput()V
+    .locals 3
+
+    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+
+    if-nez v0, :cond_0
+
+    return-void
+
+    :cond_0
+    invoke-virtual {v0}, Landroid/widget/TextView;->getText()Ljava/lang/CharSequence;
+
+    move-result-object v0
+
+    if-eqz v0, :cond_2
+
+    invoke-interface {v0}, Ljava/lang/CharSequence;->length()I
+
+    move-result v1
+
+    if-nez v1, :cond_1
+
+    goto :goto_0
+
+    :cond_1
+    const-string v1, "clipboard"
+
+    invoke-virtual {p0, v1}, Lcom/ninmods/loader/MainActivity;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+
+    move-result-object v1
+
+    check-cast v1, Landroid/content/ClipboardManager;
+
+    const-string v2, "Terminal Logs"
+
+    invoke-static {v2, v0}, Landroid/content/ClipData;->newPlainText(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Landroid/content/ClipData;
+
+    move-result-object v0
+
+    if-eqz v1, :cond_3
+
+    invoke-virtual {v1, v0}, Landroid/content/ClipboardManager;->setPrimaryClip(Landroid/content/ClipData;)V
+
+    const-string v0, "Terminal logs copied to clipboard"
+
+    const/4 v1, 0x0
+
+    invoke-static {p0, v0, v1}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Landroid/widget/Toast;->show()V
+
+    goto :goto_1
+
+    :cond_2
+    :goto_0
+    const-string v0, "Terminal log is empty"
+
+    const/4 v1, 0x0
+
+    invoke-static {p0, v0, v1}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Landroid/widget/Toast;->show()V
+
+    :cond_3
+    :goto_1
+    return-void
+.end method
+
 .method private setupUI()V
     .locals 15
 
@@ -2795,7 +2867,7 @@
 
     invoke-direct {v2, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
 
-    const-string v3, "NINMODS DRIVER LOADER"
+    const-string v3, "NINMODS KERNEL DRIVER LOADER"
 
     invoke-virtual {v2, v3}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
@@ -2999,33 +3071,7 @@
 
     invoke-virtual {v0, v5}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    new-instance v5, Landroid/widget/LinearLayout;
-
-    invoke-direct {v5, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
-
-    const/4 v7, 0x0
-
-    invoke-virtual {v5, v7}, Landroid/widget/LinearLayout;->setOrientation(I)V
-
-    const/16 v9, 0x11
-
-    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setGravity(I)V
-
-    new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v10, -0x1
-
-    const/4 v11, -0x2
-
-    invoke-direct {v9, v10, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
-
-    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
-
-    const/high16 v9, 0x40000000    # 2.0f
-
-    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setWeightSum(F)V
-
-    const-string v9, "LOAD QX (RAM)"
+    const-string v9, "LOAD KERNEL DRIVER"
 
     const v10, -0xff198a
 
@@ -3033,25 +3079,7 @@
 
     move-result-object v9
 
-    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
-
-    const-string v9, "LOAD RT (KERNEL)"
-
-    const v10, -0xff2d01
-
-    invoke-direct {p0, v9, v10}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
-
-    move-result-object v9
-
     iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
-
-    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
-
-    new-instance v10, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda4;
-
-    invoke-direct {v10, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda4;-><init>(Lcom/ninmods/loader/MainActivity;)V
-
-    invoke-virtual {v9, v10}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
     iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
 
@@ -3063,33 +3091,15 @@
 
     new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
 
-    const/4 v10, 0x0
+    const/4 v10, -0x1
 
     const/4 v11, -0x2
 
-    const/high16 v12, 0x3f800000    # 1.0f
-
-    invoke-direct {v9, v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
-
-    const/4 v13, 0x6
-
-    invoke-virtual {v9, v7, v7, v13, v7}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
-
-    iget-object v14, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
-
-    invoke-virtual {v5, v14, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    new-instance v14, Landroid/widget/LinearLayout$LayoutParams;
-
-    invoke-direct {v14, v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
-
-    invoke-virtual {v14, v13, v7, v7, v7}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    invoke-direct {v9, v10, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
 
     iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
 
-    invoke-virtual {v5, v10, v14}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    invoke-virtual {v0, v5}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+    invoke-virtual {v0, v10, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
     const/16 v6, 0xe
 
@@ -3102,6 +3112,8 @@
     new-instance v10, Landroid/widget/LinearLayout;
 
     invoke-direct {v10, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+
+    const/4 v7, 0x0
 
     invoke-virtual {v10, v7}, Landroid/widget/LinearLayout;->setOrientation(I)V
 
@@ -3159,7 +3171,7 @@
 
     invoke-direct {v6, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
 
-    const-string v7, "\ud83d\udccb COPY LOG"
+    const-string v7, "COPY LOG"
 
     invoke-virtual {v6, v7}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
