@@ -60,6 +60,12 @@ jobs:
             cp build/ninmods_loader_unsigned.apk "release_apk/NINMODS_Driver_Loader.apk"
           fi
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Loader-V41-APK
+          path: release_apk/NINMODS_Driver_Loader.apk
+
       - name: Create GitHub Release and Upload Artifact
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,4 +74,4 @@ jobs:
           gh release create "$RELEASE_TAG" \
             "release_apk/NINMODS_Driver_Loader.apk" \
             --title "NINMODS Driver Loader v2.0" \
-            --notes "Official release of NINMODS Driver Loader v2.0 with translated English scripts, real kernel status detection, and universal kernel driver support without automatic reboots."
+            --notes "Official release of NINMODS Driver Loader v2.0 with translated English scripts, real kernel status detection, and universal kernel driver support without automatic reboots." || echo "Release creation skipped"

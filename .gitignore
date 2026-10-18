@@ -11,3 +11,5 @@ __pycache__/
 /uber-apk-signer.jar
 /Driver Loader_2.0 (1).apk
 /Kernel Driver.zip
+*.bak
+*.fullbak

@@ -2,6 +2,9 @@
 .super Landroid/app/Activity;
 .source "MainActivity.java"
 
+# interfaces
+.implements Lcom/ninmods/loader/EngineManager$OutputCallback;
+
 
 # static fields
 .field private static final PERMISSION_REQUEST_CODE:I = 0x64
@@ -186,9 +189,24 @@
 .end method
 
 .method public static synthetic $r8$lambda$clickUnload(Lcom/ninmods/loader/MainActivity;Landroid/view/View;)V
-    .locals 0
+    .locals 4
 
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->unloadDriver()V
+    iget-object v1, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
+
+    iget-object v2, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+
+    iget-object v3, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+
+    invoke-static {p0, p0, v1, v2, v3}, Lcom/ninmods/loader/EngineManager;->stopAllEngines(Landroid/app/Activity;Lcom/ninmods/loader/EngineManager$OutputCallback;Landroid/widget/Button;Landroid/widget/Button;Landroid/widget/TextView;)V
+
+    return-void
+.end method
+
+.method public onOutput(Ljava/lang/String;)V
+    .locals 0
+    .param p1, "msg"    # Ljava/lang/String;
+
+    invoke-direct {p0, p1}, Lcom/ninmods/loader/MainActivity;->appendOutput(Ljava/lang/String;)V
 
     return-void
 .end method
@@ -883,6 +901,21 @@
 
     .line 330
     :try_start_0
+
+    new-instance v0, Ljava/io/File;
+    invoke-virtual {p0}, Lcom/ninmods/loader/MainActivity;->getFilesDir()Ljava/io/File;
+    move-result-object v1
+    const-string v2, "RT"
+    invoke-direct {v0, v1, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
+    invoke-static {v0}, Lcom/ninmods/loader/MainActivity;->deleteRecursive(Ljava/io/File;)V
+
+    new-instance v0, Ljava/io/File;
+    invoke-virtual {p0}, Lcom/ninmods/loader/MainActivity;->getFilesDir()Ljava/io/File;
+    move-result-object v1
+    const-string v2, "QX"
+    invoke-direct {v0, v1, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
+    invoke-static {v0}, Lcom/ninmods/loader/MainActivity;->deleteRecursive(Ljava/io/File;)V
+
     invoke-virtual {p0}, Lcom/ninmods/loader/MainActivity;->getAssets()Landroid/content/res/AssetManager;
 
     move-result-object v0
@@ -1370,14 +1403,6 @@
 
     .line 568
     :cond_0
-    const-string v0, "QX"
-
-    invoke-virtual {p2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v0
-
-    if-nez v0, :cond_1
-
     const-string v0, "RT"
 
     invoke-virtual {p2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
@@ -1386,20 +1411,13 @@
 
     if-eqz v0, :cond_3
 
-    .line 569
-    :cond_1
-    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
 
-    const-string v1, "Driver Status: Active"
+    iget-object v1, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
 
-    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    iget-object v2, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
 
-    .line 570
-    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    const v1, -0xff198a
-
-    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextColor(I)V
+    invoke-static {p0, p0, v0, v1, v2}, Lcom/ninmods/loader/EngineManager;->onKernelLoaded(Landroid/app/Activity;Lcom/ninmods/loader/EngineManager$OutputCallback;Landroid/widget/Button;Landroid/widget/Button;Landroid/widget/TextView;)V
 
     goto :goto_0
 
@@ -2282,13 +2300,16 @@
 .end method
 
 .method private synthetic lambda$setupUI$2(Landroid/view/View;)V
-    .locals 1
+    .locals 4
     .param p1, "v"    # Landroid/view/View;
 
-    .line 228
-    const-string v0, "QX"
+    iget-object v1, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
 
-    invoke-direct {p0, v0}, Lcom/ninmods/loader/MainActivity;->runDriver(Ljava/lang/String;)V
+    iget-object v2, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+
+    iget-object v3, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+
+    invoke-static {p0, p0, v1, v2, v3}, Lcom/ninmods/loader/EngineManager;->startRootDaemon(Landroid/app/Activity;Lcom/ninmods/loader/EngineManager$OutputCallback;Landroid/widget/Button;Landroid/widget/Button;Landroid/widget/TextView;)V
 
     return-void
 .end method
@@ -3179,7 +3200,7 @@
 
     invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setWeightSum(F)V
 
-    const-string v9, "LOAD QX (RAM)"
+    const-string v9, "LOAD ROOT RAM"
 
     const v10, -0xff198a
 
@@ -3189,7 +3210,7 @@
 
     iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
 
-    const-string v9, "LOAD RT (KERNEL)"
+    const-string v9, "LOAD KERNEL (RT)"
 
     const v10, -0xff2d01
 
@@ -3257,7 +3278,7 @@
 
     invoke-direct {v9, p0}, Landroid/widget/Button;-><init>(Landroid/content/Context;)V
 
-    const-string v10, "UNLOAD DRIVER"
+    const-string v10, "STOP / UNLOAD ACTIVE ENGINE"
 
     invoke-virtual {v9, v10}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
 
@@ -3700,5 +3721,44 @@
     .end local v0    # "allGranted":Z
     :cond_1
     :goto_1
+    return-void
+.end method
+
+
+.method private static deleteRecursive(Ljava/io/File;)V
+    .locals 4
+    .param p0, "file"    # Ljava/io/File;
+
+    if-nez p0, :cond_del_ret
+
+    invoke-virtual {p0}, Ljava/io/File;->exists()Z
+    move-result v0
+    if-nez v0, :cond_del_exists
+    return-void
+
+    :cond_del_exists
+    invoke-virtual {p0}, Ljava/io/File;->isDirectory()Z
+    move-result v0
+    if-eqz v0, :cond_del_self
+
+    invoke-virtual {p0}, Ljava/io/File;->listFiles()[Ljava/io/File;
+    move-result-object v0
+    if-eqz v0, :cond_del_self
+
+    array-length v1, v0
+    const/4 v2, 0x0
+
+    :goto_del_loop
+    if-ge v2, v1, :cond_del_self
+
+    aget-object v3, v0, v2
+    invoke-static {v3}, Lcom/ninmods/loader/MainActivity;->deleteRecursive(Ljava/io/File;)V
+    add-int/lit8 v2, v2, 0x1
+    goto :goto_del_loop
+
+    :cond_del_self
+    invoke-virtual {p0}, Ljava/io/File;->delete()Z
+
+    :cond_del_ret
     return-void
 .end method
