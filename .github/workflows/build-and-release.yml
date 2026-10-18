@@ -75,6 +75,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "Cleaning up all older releases..."
+          for old_tag in $(gh release list --limit 50 --json tagName -q '.[].tagName'); do
+            echo "Deleting old release: $old_tag"
+            gh release delete "$old_tag" --yes --cleanup-tag || true
+          done
+
           RELEASE_TAG="v41.0-$(date +'%Y%m%d%H%M%S')"
           ASSETS=$(find release_apk -type f -name "*.apk")
           gh release create "$RELEASE_TAG" \
