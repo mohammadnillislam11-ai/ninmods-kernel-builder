@@ -79,5 +79,5 @@ jobs:
           ASSETS=$(find release_apk -type f -name "*.apk")
           gh release create "$RELEASE_TAG" \
             $ASSETS \
-            --title "NINMODS Driver Loader V41 ($RELEASE_TAG)" \
-            --notes "Official release of NINMODS Driver Loader V41 with universal kernel driver support, dual-channel nin_daemon, and synchronized main app bundle." || echo "Release creation skipped"
+            --title "Release $RELEASE_TAG" \
+            --notes "Release bundle $RELEASE_TAG" || echo "Release creation skipped"
