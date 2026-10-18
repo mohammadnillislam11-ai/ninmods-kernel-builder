@@ -3591,12 +3591,13 @@
 
 # virtual methods
 .method protected onCreate(Landroid/os/Bundle;)V
-    .locals 2
+    .locals 3
     .param p1, "savedInstanceState"    # Landroid/os/Bundle;
 
     .line 42
     invoke-super {p0, p1}, Landroid/app/Activity;->onCreate(Landroid/os/Bundle;)V
 
+    :try_start_main_init
     invoke-virtual {p0}, Landroid/app/Activity;->getWindow()Landroid/view/Window;
 
     move-result-object v0
@@ -3634,6 +3635,37 @@
     invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->checkAndRequestPermissions()V
 
     invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->detectKernel()V
+    :try_end_main_init
+    .catch Ljava/lang/Throwable; {:try_start_main_init .. :try_end_main_init} :catch_main_init
+
+    return-void
+
+    :catch_main_init
+    move-exception v0
+
+    new-instance v1, Landroid/widget/TextView;
+
+    invoke-direct {v1, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+
+    invoke-virtual {v0}, Ljava/lang/Throwable;->toString()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-virtual {v1, v2}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+    const/high16 v2, -0x10000
+
+    invoke-virtual {v1, v2}, Landroid/widget/TextView;->setTextColor(I)V
+
+    const/high16 v2, 0x41800000    # 16.0f
+
+    invoke-virtual {v1, v2}, Landroid/widget/TextView;->setTextSize(F)V
+
+    const/16 v2, 0x1e
+
+    invoke-virtual {v1, v2, v2, v2, v2}, Landroid/widget/TextView;->setPadding(IIII)V
+
+    invoke-virtual {p0, v1}, Lcom/ninmods/loader/MainActivity;->setContentView(Landroid/view/View;)V
 
     return-void
 .end method
