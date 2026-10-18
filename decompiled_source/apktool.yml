@@ -21,5 +21,5 @@ usesFramework:
   tag: null
 version: 2.7.0-dirty
 versionInfo:
-  versionCode: '43'
-  versionName: '43.0'
+  versionCode: '44'
+  versionName: '44.0'

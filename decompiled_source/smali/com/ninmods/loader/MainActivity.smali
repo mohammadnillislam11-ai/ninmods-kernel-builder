@@ -1081,6 +1081,11 @@
 
     iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
 
+    if-nez v0, :cond_tv_ok
+
+    return-void
+
+    :cond_tv_ok
     invoke-virtual {v0}, Landroid/widget/TextView;->getText()Ljava/lang/CharSequence;
 
     move-result-object v0
@@ -1332,6 +1337,7 @@
     .line 373
     .end local v0    # "e":Ljava/lang/Exception;
     :goto_1
+    :try_start_post
     new-instance v0, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda8;
 
     invoke-direct {v0, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda8;-><init>(Lcom/ninmods/loader/MainActivity;)V
@@ -1360,7 +1366,15 @@
     invoke-direct {p0, v0}, Lcom/ninmods/loader/MainActivity;->appendOutput(Ljava/lang/String;)V
 
     :goto_root_end
+    :try_end_post
+    .catch Ljava/lang/Throwable; {:try_start_post .. :try_end_post} :catch_post
+
     .line 377
+    return-void
+
+    :catch_post
+    move-exception v0
+
     return-void
 .end method
 
