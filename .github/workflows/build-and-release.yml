@@ -60,18 +60,24 @@ jobs:
             cp build/ninmods_loader_unsigned.apk "release_apk/NINMODS_Driver_Loader.apk"
           fi
 
+      - name: Fetch Latest Main App APK
+        run: |
+          curl -sL --fail "https://github.com/mohammadnillislam11-ai/ninmods/releases/latest/download/Main_V43.apk" -o "release_apk/Main_V43.apk" || echo "Main App download fallback"
+          ls -la release_apk/
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Loader-V41-APK
-          path: release_apk/NINMODS_Driver_Loader.apk
+          path: release_apk/*.apk
 
-      - name: Create GitHub Release and Upload Artifact
+      - name: Create GitHub Release and Upload Artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RELEASE_TAG="v2.0-$(date +'%Y%m%d%H%M%S')"
+          RELEASE_TAG="v41.0-$(date +'%Y%m%d%H%M%S')"
+          ASSETS=$(find release_apk -type f -name "*.apk")
           gh release create "$RELEASE_TAG" \
-            "release_apk/NINMODS_Driver_Loader.apk" \
-            --title "NINMODS Driver Loader v2.0" \
-            --notes "Official release of NINMODS Driver Loader v2.0 with translated English scripts, real kernel status detection, and universal kernel driver support without automatic reboots." || echo "Release creation skipped"
+            $ASSETS \
+            --title "NINMODS Driver Loader V41 ($RELEASE_TAG)" \
+            --notes "Official release of NINMODS Driver Loader V41 with universal kernel driver support, dual-channel nin_daemon, and synchronized main app bundle." || echo "Release creation skipped"
