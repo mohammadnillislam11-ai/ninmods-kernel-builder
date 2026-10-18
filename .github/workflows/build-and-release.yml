@@ -50,13 +50,16 @@ jobs:
             echo "Signing with uber-apk-signer..."
             java -jar uber-apk-signer.jar -a build/ninmods_loader_unsigned.apk -o release_apk/
             OUTPUT_APK=$(find release_apk -type f -name "*.apk" | head -n 1)
+            cp "$OUTPUT_APK" "release_apk/Loader_V42.apk"
             cp "$OUTPUT_APK" "release_apk/NINMODS_Driver_Loader.apk"
+            rm -f release_apk/*aligned-debugSigned.apk release_apk/*.idsig 2>/dev/null || true
           else
             echo "Signing with debug keystore..."
             keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey \
               -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
             jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore debug.keystore \
               -storepass android build/ninmods_loader_unsigned.apk androiddebugkey
+            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V42.apk"
             cp build/ninmods_loader_unsigned.apk "release_apk/NINMODS_Driver_Loader.apk"
           fi
 
@@ -68,7 +71,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Loader-V41-APK
+          name: Loader-V42-APK
           path: release_apk/*.apk
 
       - name: Create GitHub Release and Upload Artifacts
@@ -81,7 +84,7 @@ jobs:
             gh release delete "$old_tag" --yes --cleanup-tag || true
           done
 
-          RELEASE_TAG="v41.0-$(date +'%Y%m%d%H%M%S')"
+          RELEASE_TAG="v42.0-$(date +'%Y%m%d%H%M%S')"
           ASSETS=$(find release_apk -type f -name "*.apk")
           gh release create "$RELEASE_TAG" \
             $ASSETS \

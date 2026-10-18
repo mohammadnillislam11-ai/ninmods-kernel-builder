@@ -259,41 +259,37 @@
 .method private checkAndRequestPermissions()V
     .locals 6
 
-    .line 84
+    :try_start_0
     sget v0, Landroid/os/Build$VERSION;->SDK_INT:I
 
-    const/16 v1, 0x1e
+    const/16 v1, 0x21
 
-    const-string v2, "android.permission.WRITE_EXTERNAL_STORAGE"
+    if-lt v0, v1, :cond_check_legacy
 
-    const-string v3, "android.permission.READ_EXTERNAL_STORAGE"
+    const-string v0, "android.permission.POST_NOTIFICATIONS"
 
-    if-lt v0, v1, :cond_0
-
-    .line 85
-    const-string v0, "android.permission.MANAGE_EXTERNAL_STORAGE"
-
-    filled-new-array {v3, v2, v0}, [Ljava/lang/String;
+    filled-new-array {v0}, [Ljava/lang/String;
 
     move-result-object v0
 
-    .local v0, "permissions":[Ljava/lang/String;
     goto :goto_0
 
-    .line 91
-    .end local v0    # "permissions":[Ljava/lang/String;
-    :cond_0
-    filled-new-array {v3, v2}, [Ljava/lang/String;
+    :cond_check_legacy
+    const/16 v1, 0x17
+
+    if-lt v0, v1, :cond_perm_done
+
+    const-string v0, "android.permission.READ_EXTERNAL_STORAGE"
+
+    const-string v1, "android.permission.WRITE_EXTERNAL_STORAGE"
+
+    filled-new-array {v0, v1}, [Ljava/lang/String;
 
     move-result-object v0
 
-    .line 97
-    .restart local v0    # "permissions":[Ljava/lang/String;
     :goto_0
     const/4 v1, 0x1
 
-    .line 98
-    .local v1, "allGranted":Z
     array-length v2, v0
 
     const/4 v3, 0x0
@@ -303,39 +299,38 @@
 
     aget-object v4, v0, v3
 
-    .line 99
-    .local v4, "permission":Ljava/lang/String;
     invoke-static {p0, v4}, Landroidx/core/content/ContextCompat;->checkSelfPermission(Landroid/content/Context;Ljava/lang/String;)I
 
     move-result v5
 
     if-eqz v5, :cond_1
 
-    .line 101
     const/4 v1, 0x0
 
-    .line 102
     goto :goto_2
 
-    .line 98
-    .end local v4    # "permission":Ljava/lang/String;
     :cond_1
     add-int/lit8 v3, v3, 0x1
 
     goto :goto_1
 
-    .line 106
     :cond_2
     :goto_2
-    if-nez v1, :cond_3
+    if-nez v1, :cond_perm_done
 
-    .line 107
     const/16 v2, 0x64
 
     invoke-static {p0, v0, v2}, Landroidx/core/app/ActivityCompat;->requestPermissions(Landroid/app/Activity;[Ljava/lang/String;I)V
 
-    .line 113
-    :cond_3
+    :cond_perm_done
+    :try_end_0
+    .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_perm
+
+    return-void
+
+    :catch_perm
+    move-exception v0
+
     return-void
 .end method
 
@@ -934,7 +929,7 @@
 
     .line 333
     .local v1, "zis":Ljava/util/zip/ZipInputStream;
-    const/16 v2, 0x400
+    const/16 v2, 0x2000
 
     new-array v2, v2, [B
 
@@ -1343,6 +1338,28 @@
 
     invoke-virtual {p0, v0}, Lcom/ninmods/loader/MainActivity;->runOnUiThread(Ljava/lang/Runnable;)V
 
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->extractDrivers()V
+
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->copyDriverChecker()V
+
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->checkRoot()Z
+
+    move-result v0
+
+    if-eqz v0, :cond_root_msg
+
+    const-string v0, "[+] Superuser: Granted (Ready)"
+
+    invoke-direct {p0, v0}, Lcom/ninmods/loader/MainActivity;->appendOutput(Ljava/lang/String;)V
+
+    goto :goto_root_end
+
+    :cond_root_msg
+    const-string v0, "[-] Notice: Root not detected. Please allow Superuser."
+
+    invoke-direct {p0, v0}, Lcom/ninmods/loader/MainActivity;->appendOutput(Ljava/lang/String;)V
+
+    :goto_root_end
     .line 377
     return-void
 .end method
@@ -3562,8 +3579,6 @@
 
     invoke-virtual {v0}, Landroid/widget/Toast;->show()V
 
-    invoke-virtual {p0}, Landroid/app/Activity;->finish()V
-
     return-void
 .end method
 
@@ -3598,30 +3613,12 @@
 
     invoke-virtual {v0, v1}, Landroid/view/View;->setSystemUiVisibility(I)V
 
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->showModifiedPopup()V
-
-    .line 44
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->checkRoot()Z
-
-    move-result v0
-
-    if-nez v0, :cond_0
-
-    .line 45
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->showAndExit()V
-
-    .line 46
-    return-void
-
-    .line 49
-    :cond_0
     invoke-static {}, Ljava/util/concurrent/Executors;->newSingleThreadExecutor()Ljava/util/concurrent/ExecutorService;
 
     move-result-object v0
 
     iput-object v0, p0, Lcom/ninmods/loader/MainActivity;->executorService:Ljava/util/concurrent/ExecutorService;
 
-    .line 50
     new-instance v0, Landroid/os/Handler;
 
     invoke-static {}, Landroid/os/Looper;->getMainLooper()Landroid/os/Looper;
@@ -3632,22 +3629,12 @@
 
     iput-object v0, p0, Lcom/ninmods/loader/MainActivity;->mainHandler:Landroid/os/Handler;
 
-    .line 52
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->checkAndRequestPermissions()V
-
-    .line 53
     invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->setupUI()V
 
-    .line 54
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->extractDrivers()V
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->checkAndRequestPermissions()V
 
-    .line 55
     invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->detectKernel()V
 
-    .line 56
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->copyDriverChecker()V
-
-    .line 57
     return-void
 .end method
 
@@ -3729,8 +3716,10 @@
     .locals 4
     .param p0, "file"    # Ljava/io/File;
 
-    if-nez p0, :cond_del_ret
+    if-nez p0, :cond_del_not_null
+    return-void
 
+    :cond_del_not_null
     invoke-virtual {p0}, Ljava/io/File;->exists()Z
     move-result v0
     if-nez v0, :cond_del_exists
@@ -3759,6 +3748,5 @@
     :cond_del_self
     invoke-virtual {p0}, Ljava/io/File;->delete()Z
 
-    :cond_del_ret
     return-void
 .end method
