@@ -574,207 +574,203 @@
     return-void
 .end method
 
-.method private createCard()Landroid/widget/LinearLayout;
-    .locals 5
 
-    .line 271
-    new-instance v0, Landroid/widget/LinearLayout;
+.method private dp(I)I
+    .locals 2
+    .param p1, "val"    # I
 
-    invoke-direct {v0, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+    invoke-virtual {p0}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+    move-result-object v0
 
-    .line 272
-    .local v0, "card":Landroid/widget/LinearLayout;
-    const/4 v1, 0x1
+    invoke-virtual {v0}, Landroid/content/res/Resources;->getDisplayMetrics()Landroid/util/DisplayMetrics;
+    move-result-object v0
 
-    invoke-virtual {v0, v1}, Landroid/widget/LinearLayout;->setOrientation(I)V
+    iget v0, v0, Landroid/util/DisplayMetrics;->density:F
 
-    .line 274
-    new-instance v2, Landroid/graphics/drawable/GradientDrawable;
+    int-to-float v1, p1
 
-    invoke-direct {v2}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
+    mul-float/2addr v1, v0
 
-    .line 275
-    .local v2, "cardBg":Landroid/graphics/drawable/GradientDrawable;
-    const v3, -0xf1e8d6
+    const/high16 v0, 0x3f000000    # 0.5f
 
-    invoke-virtual {v2, v3}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+    add-float/2addr v1, v0
 
-    .line 276
-    const/high16 v3, 0x41200000    # 10.0f
+    float-to-int v1, v1
 
-    invoke-virtual {v2, v3}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
-
-    .line 277
-    const v3, -0xddc9b7
-
-    invoke-virtual {v2, v1, v3}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
-
-    .line 278
-    invoke-virtual {v0, v2}, Landroid/widget/LinearLayout;->setBackground(Landroid/graphics/drawable/Drawable;)V
-
-    .line 280
-    new-instance v1, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v3, -0x1
-
-    const/4 v4, -0x2
-
-    invoke-direct {v1, v3, v4}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
-
-    .line 282
-    .local v1, "params":Landroid/widget/LinearLayout$LayoutParams;
-    const/4 v3, 0x0
-
-    const/16 v4, 0xc
-
-    invoke-virtual {v1, v3, v3, v3, v4}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
-
-    .line 283
-    invoke-virtual {v0, v1}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
-
-    .line 285
-    return-object v0
-.end method
-
-.method private createOrangeButton(Ljava/lang/String;)Landroid/widget/Button;
-    .locals 3
-    .param p1, "text"    # Ljava/lang/String;
-
-    .line 312
-    new-instance v0, Landroid/widget/Button;
-
-    invoke-direct {v0, p0}, Landroid/widget/Button;-><init>(Landroid/content/Context;)V
-
-    .line 313
-    .local v0, "btn":Landroid/widget/Button;
-    invoke-virtual {v0, p1}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
-
-    .line 314
-    const v1, -0xf4ede0
-
-    invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextColor(I)V
-
-    .line 315
-    const/high16 v1, 0x41600000    # 14.0f
-
-    invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextSize(F)V
-
-    .line 316
-    const/4 v1, 0x0
-
-    const/4 v2, 0x1
-
-    invoke-virtual {v0, v1, v2}, Landroid/widget/Button;->setTypeface(Landroid/graphics/Typeface;I)V
-
-    .line 317
-    const/16 v1, 0x19
-
-    const/16 v2, 0x12
-
-    invoke-virtual {v0, v1, v2, v1, v2}, Landroid/widget/Button;->setPadding(IIII)V
-
-    .line 319
-    new-instance v1, Landroid/graphics/drawable/GradientDrawable;
-
-    invoke-direct {v1}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
-
-    .line 320
-    .local v1, "shape":Landroid/graphics/drawable/GradientDrawable;
-    const v2, -0xff2d01
-
-    invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
-
-    .line 321
-    const/high16 v2, 0x41200000    # 10.0f
-
-    invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
-
-    .line 322
-    invoke-virtual {v0, v1}, Landroid/widget/Button;->setBackground(Landroid/graphics/drawable/Drawable;)V
-
-    .line 324
-    return-object v0
-.end method
-
-.method private createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
-    .locals 4
-    .param p1, "text"    # Ljava/lang/String;
-    .param p2, "color"    # I
-
-    .line 296
-    new-instance v0, Landroid/widget/Button;
-
-    invoke-direct {v0, p0}, Landroid/widget/Button;-><init>(Landroid/content/Context;)V
-
-    .line 297
-    .local v0, "btn":Landroid/widget/Button;
-    invoke-virtual {v0, p1}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
-
-    .line 298
-    const v1, -0xf4ede0
-
-    invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextColor(I)V
-
-    .line 299
-    const/high16 v1, 0x41600000    # 14.0f
-
-    invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextSize(F)V
-
-    .line 300
-    sget-object v1, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
-
-    const/4 v2, 0x1
-
-    invoke-virtual {v0, v1, v2}, Landroid/widget/Button;->setTypeface(Landroid/graphics/Typeface;I)V
-
-    .line 301
-    const/16 v1, 0x19
-
-    const/16 v2, 0x12
-
-    invoke-virtual {v0, v1, v2, v1, v2}, Landroid/widget/Button;->setPadding(IIII)V
-
-    .line 303
-    new-instance v1, Landroid/graphics/drawable/GradientDrawable;
-
-    invoke-direct {v1}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
-
-    .line 304
-    .local v1, "shape":Landroid/graphics/drawable/GradientDrawable;
-    invoke-virtual {v1, p2}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
-
-    .line 305
-    const/high16 v2, 0x41200000    # 10.0f
-
-    invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
-
-    .line 306
-    invoke-virtual {v0, v1}, Landroid/widget/Button;->setBackground(Landroid/graphics/drawable/Drawable;)V
-
-    .line 308
-    return-object v0
+    return v1
 .end method
 
 .method private createSpacer(I)Landroid/view/View;
     .locals 3
-    .param p1, "height"    # I
+    .param p1, "heightDp"    # I
 
-    .line 289
     new-instance v0, Landroid/view/View;
-
     invoke-direct {v0, p0}, Landroid/view/View;-><init>(Landroid/content/Context;)V
 
-    .line 290
-    .local v0, "spacer":Landroid/view/View;
+    invoke-direct {p0, p1}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v1
+
+    new-instance v2, Landroid/widget/LinearLayout$LayoutParams;
+    const/4 p1, -0x1
+    invoke-direct {v2, p1, v1}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+
+    invoke-virtual {v0, v2}, Landroid/view/View;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
+
+    return-object v0
+.end method
+
+.method private createCard()Landroid/widget/LinearLayout;
+    .locals 5
+
+    new-instance v0, Landroid/widget/LinearLayout;
+    invoke-direct {v0, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+
+    const/4 v1, 0x1
+    invoke-virtual {v0, v1}, Landroid/widget/LinearLayout;->setOrientation(I)V
+
+    const/16 v2, 0xe
+    invoke-direct {p0, v2}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v2
+
+    const/16 v3, 0xc
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v3
+
+    invoke-virtual {v0, v2, v3, v2, v3}, Landroid/widget/LinearLayout;->setPadding(IIII)V
+
+    new-instance v2, Landroid/graphics/drawable/GradientDrawable;
+    invoke-direct {v2}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
+
+    const v3, 0x2bf76bf7    # MAGENTA_CARD
+    invoke-virtual {v2, v3}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+
+    const/16 v3, 0xc
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v3
+    int-to-float v3, v3
+    invoke-virtual {v2, v3}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
+
+    const/4 v3, 0x1
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v3
+
+    const v4, 0x44f76bf7    # MAGENTA_CARD_BORDER
+    invoke-virtual {v2, v3, v4}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
+
+    invoke-virtual {v0, v2}, Landroid/widget/LinearLayout;->setBackground(Landroid/graphics/drawable/Drawable;)V
+
     new-instance v1, Landroid/widget/LinearLayout$LayoutParams;
+    const/4 v3, -0x1
+    const/4 v4, -0x2
+    invoke-direct {v1, v3, v4}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
 
-    const/4 v2, -0x1
+    const/16 v3, 0xa
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v3
 
-    invoke-direct {v1, v2, p1}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    const/4 v4, 0x0
+    invoke-virtual {v1, v4, v4, v4, v3}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
 
-    invoke-virtual {v0, v1}, Landroid/view/View;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
+    invoke-virtual {v0, v1}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
 
-    .line 292
+    return-object v0
+.end method
+
+.method private createOrangeButton(Ljava/lang/String;)Landroid/widget/Button;
+    .locals 5
+    .param p1, "text"    # Ljava/lang/String;
+
+    new-instance v0, Landroid/widget/Button;
+    invoke-direct {v0, p0}, Landroid/widget/Button;-><init>(Landroid/content/Context;)V
+
+    invoke-virtual {v0, p1}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
+
+    const/4 v1, -0x1
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextColor(I)V
+
+    const/high16 v1, 0x41500000    # 13.0f
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextSize(F)V
+
+    sget-object v1, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    const/4 v2, 0x1
+    invoke-virtual {v0, v1, v2}, Landroid/widget/Button;->setTypeface(Landroid/graphics/Typeface;I)V
+
+    const/16 v1, 0x10
+    invoke-direct {p0, v1}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v1
+
+    const/16 v2, 0xc
+    invoke-direct {p0, v2}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v2
+
+    invoke-virtual {v0, v1, v2, v1, v2}, Landroid/widget/Button;->setPadding(IIII)V
+
+    new-instance v1, Landroid/graphics/drawable/GradientDrawable;
+    invoke-direct {v1}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
+
+    const v2, -0x19c81a    # 0xFFE637E6 (MAGENTA_PRIMARY)
+    invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+
+    const/16 v2, 0xa
+    invoke-direct {p0, v2}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v2
+    int-to-float v2, v2
+    invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
+
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setBackground(Landroid/graphics/drawable/Drawable;)V
+
+    return-object v0
+.end method
+
+.method private createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
+    .locals 5
+    .param p1, "text"    # Ljava/lang/String;
+    .param p2, "strokeColor"    # I
+
+    new-instance v0, Landroid/widget/Button;
+    invoke-direct {v0, p0}, Landroid/widget/Button;-><init>(Landroid/content/Context;)V
+
+    invoke-virtual {v0, p1}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
+
+    const/4 v1, -0x1
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextColor(I)V
+
+    const/high16 v1, 0x41400000    # 12.0f
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setTextSize(F)V
+
+    sget-object v1, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    const/4 v2, 0x1
+    invoke-virtual {v0, v1, v2}, Landroid/widget/Button;->setTypeface(Landroid/graphics/Typeface;I)V
+
+    const/16 v1, 0xc
+    invoke-direct {p0, v1}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v1
+
+    const/16 v2, 0xa
+    invoke-direct {p0, v2}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v2
+
+    invoke-virtual {v0, v1, v2, v1, v2}, Landroid/widget/Button;->setPadding(IIII)V
+
+    new-instance v1, Landroid/graphics/drawable/GradientDrawable;
+    invoke-direct {v1}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
+
+    const v2, 0x66220a2e
+    invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+
+    const/16 v2, 0xa
+    invoke-direct {p0, v2}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v2
+    int-to-float v2, v2
+    invoke-virtual {v1, v2}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
+
+    const/4 v2, 0x1
+    invoke-direct {p0, v2}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v2
+    invoke-virtual {v1, v2, p2}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
+
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setBackground(Landroid/graphics/drawable/Drawable;)V
+
     return-object v0
 .end method
 
@@ -2915,670 +2911,560 @@
     return-void
 .end method
 
+
 .method private setupUI()V
     .locals 15
 
-    .line 170
-    new-instance v0, Landroid/widget/LinearLayout;
+    new-instance v0, Landroid/widget/FrameLayout;
+    invoke-direct {v0, p0}, Landroid/widget/FrameLayout;-><init>(Landroid/content/Context;)V
 
-    invoke-direct {v0, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+    new-instance v1, Landroid/view/ViewGroup$LayoutParams;
+    const/4 v2, -0x1
+    invoke-direct {v1, v2, v2}, Landroid/view/ViewGroup$LayoutParams;-><init>(II)V
+    invoke-virtual {v0, v1}, Landroid/widget/FrameLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
 
-    .line 171
-    .local v0, "root":Landroid/widget/LinearLayout;
-    const/4 v1, 0x1
+    const v1, -0xf4fcee    # 0xFF0B0312
+    invoke-virtual {v0, v1}, Landroid/widget/FrameLayout;->setBackgroundColor(I)V
 
-    invoke-virtual {v0, v1}, Landroid/widget/LinearLayout;->setOrientation(I)V
+    new-instance v1, Lnin/app/ui/ParticleNetworkView;
+    invoke-direct {v1, p0}, Lnin/app/ui/ParticleNetworkView;-><init>(Landroid/content/Context;)V
 
-    .line 172
-    const/16 v2, 0x18
+    new-instance v3, Landroid/widget/FrameLayout$LayoutParams;
+    invoke-direct {v3, v2, v2}, Landroid/widget/FrameLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v0, v1, v3}, Landroid/widget/FrameLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    const/16 v3, 0x24
-
-    const/16 v4, 0x14
-
-    invoke-virtual {v0, v2, v3, v2, v4}, Landroid/widget/LinearLayout;->setPadding(IIII)V
-
-    .line 173
-    const v2, -0xf4ede0
-
-    invoke-virtual {v0, v2}, Landroid/widget/LinearLayout;->setBackgroundColor(I)V
-
+    new-instance v1, Landroid/widget/LinearLayout;
+    invoke-direct {v1, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
     const/4 v3, 0x1
+    invoke-virtual {v1, v3}, Landroid/widget/LinearLayout;->setOrientation(I)V
 
-    invoke-virtual {v0, v3}, Landroid/widget/LinearLayout;->setGravity(I)V
+    new-instance v4, Landroid/widget/FrameLayout$LayoutParams;
+    invoke-direct {v4, v2, v2}, Landroid/widget/FrameLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v1, v4}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
 
-    new-instance v2, Landroid/view/ViewGroup$LayoutParams;
+    new-instance v4, Landroid/widget/LinearLayout;
+    invoke-direct {v4, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+    const/4 v5, 0x0
+    invoke-virtual {v4, v5}, Landroid/widget/LinearLayout;->setOrientation(I)V
+    const/16 v6, 0x10
+    invoke-virtual {v4, v6}, Landroid/widget/LinearLayout;->setGravity(I)V
 
-    const/4 v3, -0x1
+    const/16 v6, 0x10
+    invoke-direct {p0, v6}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v6
+    const/16 v7, 0xa
+    invoke-direct {p0, v7}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v7
+    invoke-virtual {v4, v6, v7, v6, v7}, Landroid/widget/LinearLayout;->setPadding(IIII)V
 
-    invoke-direct {v2, v3, v3}, Landroid/view/ViewGroup$LayoutParams;-><init>(II)V
+    new-instance v6, Landroid/widget/LinearLayout$LayoutParams;
+    const/4 v7, -0x2
+    invoke-direct {v6, v2, v7}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v4, v6}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
 
-    invoke-virtual {v0, v2}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
-
-    new-instance v2, Landroid/widget/ImageView;
-
-    invoke-direct {v2, p0}, Landroid/widget/ImageView;-><init>(Landroid/content/Context;)V
+    new-instance v6, Landroid/widget/ImageView;
+    invoke-direct {v6, p0}, Landroid/widget/ImageView;-><init>(Landroid/content/Context;)V
 
     invoke-virtual {p0}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
-
-    move-result-object v3
-
-    const-string v4, "nin_logo"
-
-    const-string v5, "drawable"
-
+    move-result-object v8
+    const-string v9, "nin_logo"
+    const-string v10, "drawable"
     invoke-virtual {p0}, Landroid/content/Context;->getPackageName()Ljava/lang/String;
-
-    move-result-object v6
-
-    invoke-virtual {v3, v4, v5, v6}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
-
-    move-result v3
-
-    invoke-virtual {v2, v3}, Landroid/widget/ImageView;->setImageResource(I)V
-
-    new-instance v3, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v4, -0x1
-
-    const/16 v5, 0x48
-
-    invoke-direct {v3, v4, v5}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
-
-    invoke-virtual {v2, v3}, Landroid/view/View;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
-
-    invoke-virtual {v0, v2}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    const/16 v3, 0xc
-
-    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
-
-    move-result-object v2
-
-    invoke-virtual {v0, v2}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    new-instance v2, Landroid/widget/TextView;
-
-    invoke-direct {v2, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
-
-    const-string v3, "NINMODS DRIVER LOADER"
-
-    invoke-virtual {v2, v3}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-
-    const v3, -0xff2d01
-
-    invoke-virtual {v2, v3}, Landroid/widget/TextView;->setTextColor(I)V
-
-    const/high16 v3, 0x41880000    # 17.0f
-
-    invoke-virtual {v2, v3}, Landroid/widget/TextView;->setTextSize(F)V
-
-    const/16 v3, 0x11
-
-    invoke-virtual {v2, v3}, Landroid/widget/TextView;->setGravity(I)V
-
-    sget-object v3, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
-
-    invoke-virtual {v2, v3, v1}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
-
-    new-instance v1, Landroid/graphics/drawable/GradientDrawable;
-
-    invoke-direct {v1}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
-
-    const v3, -0xf1e8d6
-
-    invoke-virtual {v1, v3}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
-
-    const/high16 v4, 0x41400000    # 12.0f
-
-    invoke-virtual {v1, v4}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
-
-    const/4 v4, 0x2
-
-    const v5, -0xff2d01
-
-    invoke-virtual {v1, v4, v5}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
-
-    invoke-virtual {v2, v1}, Landroid/widget/TextView;->setBackground(Landroid/graphics/drawable/Drawable;)V
-
-    const/16 v4, 0x14
-
-    const/16 v5, 0xa
-
-    invoke-virtual {v2, v4, v5, v4, v5}, Landroid/widget/TextView;->setPadding(IIII)V
-
-    invoke-virtual {v0, v2}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    const/16 v4, 0xc
-
-    invoke-direct {p0, v4}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
-
-    move-result-object v4
-
-    invoke-virtual {v0, v4}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->createCard()Landroid/widget/LinearLayout;
-
-    move-result-object v4
-
-    new-instance v6, Landroid/widget/TextView;
-
-    invoke-direct {v6, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
-
-    iput-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
-
-    iget-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
-
-    const-string v7, "Kernel: Detecting..."
-
-    invoke-virtual {v6, v7}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-
-    iget-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
-
-    const v7, -0xff198a
-
-    invoke-virtual {v6, v7}, Landroid/widget/TextView;->setTextColor(I)V
-
-    iget-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
-
-    const/high16 v7, 0x41500000    # 13.0f
-
-    invoke-virtual {v6, v7}, Landroid/widget/TextView;->setTextSize(F)V
-
-    iget-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
-
-    sget-object v7, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
-
-    invoke-virtual {v6, v7}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;)V
-
-    iget-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
-
-    const/16 v7, 0xe
-
-    const/16 v8, 0x8
-
-    invoke-virtual {v6, v7, v8, v7, v8}, Landroid/widget/TextView;->setPadding(IIII)V
-
-    iget-object v6, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
-
+    move-result-object v11
+    invoke-virtual {v8, v9, v10, v11}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+    move-result v8
+    if-eqz v8, :cond_skip_logo
+    invoke-virtual {v6, v8}, Landroid/widget/ImageView;->setImageResource(I)V
+    :cond_skip_logo
+
+    const/16 v8, 0x26
+    invoke-direct {p0, v8}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v8
+    new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v9, v8, v8}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    const/16 v8, 0xa
+    invoke-direct {p0, v8}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v8
+    invoke-virtual {v9, v5, v5, v8, v5}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    invoke-virtual {v4, v6, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+
+    new-instance v6, Landroid/widget/LinearLayout;
+    invoke-direct {v6, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+    invoke-virtual {v6, v3}, Landroid/widget/LinearLayout;->setOrientation(I)V
+    new-instance v8, Landroid/widget/LinearLayout$LayoutParams;
+    const/high16 v9, 0x3f800000    # 1.0f
+    invoke-direct {v8, v5, v7, v9}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
+
+    new-instance v8, Landroid/widget/TextView;
+    invoke-direct {v8, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    const-string v9, "NINMODS"
+    invoke-virtual {v8, v9}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    const/4 v9, -0x1
+    invoke-virtual {v8, v9}, Landroid/widget/TextView;->setTextColor(I)V
+    const/high16 v9, 0x41800000    # 16.0f
+    invoke-virtual {v8, v9}, Landroid/widget/TextView;->setTextSize(F)V
+    sget-object v9, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v8, v9, v3}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
+    new-instance v8, Landroid/widget/TextView;
+    invoke-direct {v8, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    const-string v9, "TACTICAL DRIVER LOADER"
+    invoke-virtual {v8, v9}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    const v9, -0x266127    # 0xFFD99ED9
+    invoke-virtual {v8, v9}, Landroid/widget/TextView;->setTextColor(I)V
+    const/high16 v9, 0x41200000    # 10.0f
+    invoke-virtual {v8, v9}, Landroid/widget/TextView;->setTextSize(F)V
+    sget-object v9, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v8, v9}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;)V
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
     invoke-virtual {v4, v6}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    invoke-virtual {v0, v4}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+    new-instance v6, Landroid/widget/TextView;
+    invoke-direct {v6, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    const-string v8, "SUPERUSER"
+    invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    const v8, -0xdd3aa2    # 0xFF22C55E
+    invoke-virtual {v6, v8}, Landroid/widget/TextView;->setTextColor(I)V
+    const/high16 v8, 0x41200000    # 10.0f
+    invoke-virtual {v6, v8}, Landroid/widget/TextView;->setTextSize(F)V
+    sget-object v8, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v6, v8, v3}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
 
-    const/16 v6, 0x8
+    const/16 v8, 0x8
+    invoke-direct {p0, v8}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v8
+    const/4 v9, 0x4
+    invoke-direct {p0, v9}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v9
+    invoke-virtual {v6, v8, v9, v8, v9}, Landroid/widget/TextView;->setPadding(IIII)V
 
-    invoke-direct {p0, v6}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
+    new-instance v8, Landroid/graphics/drawable/GradientDrawable;
+    invoke-direct {v8}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
+    const v9, 0x2022c55e
+    invoke-virtual {v8, v9}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+    const/16 v9, 0xc
+    invoke-direct {p0, v9}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v9
+    int-to-float v9, v9
+    invoke-virtual {v8, v9}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v9
+    const v10, -0xdd3aa2    # 0xFF22C55E
+    invoke-virtual {v8, v9, v10}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
+    invoke-virtual {v6, v8}, Landroid/widget/TextView;->setBackground(Landroid/graphics/drawable/Drawable;)V
 
-    move-result-object v8
+    new-instance v8, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v8, v7, v7}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v4, v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    invoke-virtual {v0, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+    invoke-virtual {v1, v4}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
+    new-instance v4, Landroid/view/View;
+    invoke-direct {v4, p0}, Landroid/view/View;-><init>(Landroid/content/Context;)V
+    const v6, 0x33f76bf7
+    invoke-virtual {v4, v6}, Landroid/view/View;->setBackgroundColor(I)V
+    new-instance v6, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v8
+    invoke-direct {v6, v2, v8}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v1, v4, v6}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+
+    new-instance v4, Landroid/widget/ScrollView;
+    invoke-direct {v4, p0}, Landroid/widget/ScrollView;-><init>(Landroid/content/Context;)V
+    invoke-virtual {v4, v3}, Landroid/widget/ScrollView;->setFillViewport(Z)V
+    new-instance v6, Landroid/widget/LinearLayout$LayoutParams;
+    const/high16 v8, 0x3f800000    # 1.0f
+    invoke-direct {v6, v2, v5, v8}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
+    invoke-virtual {v4, v6}, Landroid/widget/ScrollView;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
+
+    new-instance v6, Landroid/widget/LinearLayout;
+    invoke-direct {v6, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+    invoke-virtual {v6, v3}, Landroid/widget/LinearLayout;->setOrientation(I)V
+    const/16 v8, 0x10
+    invoke-direct {p0, v8}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v8
+    const/16 v9, 0xc
+    invoke-direct {p0, v9}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v9
+    invoke-virtual {v6, v8, v9, v8, v9}, Landroid/widget/LinearLayout;->setPadding(IIII)V
+
+    # Card 1: Telemetry
     invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->createCard()Landroid/widget/LinearLayout;
-
     move-result-object v8
 
     new-instance v9, Landroid/widget/TextView;
-
     invoke-direct {v9, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
-
-    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    const-string v10, "Driver Status: Not checked"
-
+    const-string v10, "SYSTEM TELEMETRY"
     invoke-virtual {v9, v10}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-
-    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    const v10, -0xff2d01
-
+    const v10, -0x1d4218    # 0xFFE2BDE8
     invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextColor(I)V
-
-    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    const/high16 v10, 0x41500000    # 13.0f
-
+    const/high16 v10, 0x41280000    # 10.5f
     invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextSize(F)V
-
-    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
     sget-object v10, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v9, v10, v3}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
+    invoke-virtual {v8, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
+    new-instance v9, Landroid/widget/TextView;
+    invoke-direct {v9, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
+    const-string v10, "Kernel: Detecting..."
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
+    const/4 v10, -0x1
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextColor(I)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
+    const/high16 v10, 0x41480000    # 12.5f
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextSize(F)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
+    sget-object v10, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
     invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
+    const/4 v10, 0x4
+    invoke-direct {p0, v10}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v10
+    invoke-virtual {v9, v5, v10, v5, v5}, Landroid/widget/TextView;->setPadding(IIII)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvKernel:Landroid/widget/TextView;
+    invoke-virtual {v8, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
+    # Card 2: Driver Status
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->createCard()Landroid/widget/LinearLayout;
+    move-result-object v8
+
+    new-instance v9, Landroid/widget/TextView;
+    invoke-direct {v9, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    const-string v10, "DRIVER CHANNEL STATUS"
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    const v10, -0x1d4218    # 0xFFE2BDE8
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextColor(I)V
+    const/high16 v10, 0x41280000    # 10.5f
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextSize(F)V
+    sget-object v10, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v9, v10, v3}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
+    invoke-virtual {v8, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
+    new-instance v9, Landroid/widget/TextView;
+    invoke-direct {v9, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
     iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+    const-string v10, "Driver Status: Not checked"
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+    const v10, -0x894089    # 0xFFF76BF7
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextColor(I)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+    const/high16 v10, 0x41480000    # 12.5f
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextSize(F)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+    sget-object v10, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+    const/4 v10, 0x4
+    invoke-direct {p0, v10}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v10
+    invoke-virtual {v9, v5, v10, v5, v5}, Landroid/widget/TextView;->setPadding(IIII)V
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+    invoke-virtual {v8, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    const/16 v7, 0xe
+    # Card 3: Engine Execution
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->createCard()Landroid/widget/LinearLayout;
+    move-result-object v8
 
+    new-instance v9, Landroid/widget/TextView;
+    invoke-direct {v9, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    const-string v10, "ENGINE CONTROLS"
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    const v10, -0x1d4218    # 0xFFE2BDE8
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextColor(I)V
+    const/high16 v10, 0x41280000    # 10.5f
+    invoke-virtual {v9, v10}, Landroid/widget/TextView;->setTextSize(F)V
+    sget-object v10, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v9, v10, v3}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
+    invoke-virtual {v8, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+
+    const-string v9, "CHECK DRIVER"
+    invoke-direct {p0, v9}, Lcom/ninmods/loader/MainActivity;->createOrangeButton(Ljava/lang/String;)Landroid/widget/Button;
+    move-result-object v9
+    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnCheckDriver:Landroid/widget/Button;
+    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnCheckDriver:Landroid/widget/Button;
+    new-instance v10, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda3;
+    invoke-direct {v10, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda3;-><init>(Lcom/ninmods/loader/MainActivity;)V
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+    new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v9, v2, v7}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
     const/16 v10, 0x8
-
-    invoke-virtual {v9, v7, v10, v7, v10}, Landroid/widget/TextView;->setPadding(IIII)V
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    invoke-virtual {v8, v7}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    invoke-virtual {v0, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    const/16 v7, 0xc
-
-    invoke-direct {p0, v7}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
-
-    move-result-object v7
-
-    invoke-virtual {v0, v7}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    const-string v7, "CHECK DRIVER"
-
-    invoke-direct {p0, v7}, Lcom/ninmods/loader/MainActivity;->createOrangeButton(Ljava/lang/String;)Landroid/widget/Button;
-
-    move-result-object v7
-
-    iput-object v7, p0, Lcom/ninmods/loader/MainActivity;->btnCheckDriver:Landroid/widget/Button;
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->btnCheckDriver:Landroid/widget/Button;
-
-    new-instance v9, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda3;
-
-    invoke-direct {v9, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda3;-><init>(Lcom/ninmods/loader/MainActivity;)V
-
-    invoke-virtual {v7, v9}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
-
-    new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v10, -0x1
-
-    const/4 v11, -0x2
-
-    invoke-direct {v9, v10, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->btnCheckDriver:Landroid/widget/Button;
-
-    invoke-virtual {v0, v7, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    const/16 v7, 0xa
-
-    invoke-direct {p0, v7}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
-
-    move-result-object v5
-
-    invoke-virtual {v0, v5}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    new-instance v5, Landroid/widget/LinearLayout;
-
-    invoke-direct {v5, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
-
-    const/4 v7, 0x0
-
-    invoke-virtual {v5, v7}, Landroid/widget/LinearLayout;->setOrientation(I)V
-
-    const/16 v9, 0x11
-
-    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setGravity(I)V
-
-    new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v10, -0x1
-
-    const/4 v11, -0x2
-
-    invoke-direct {v9, v10, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
-
-    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
-
-    const/high16 v9, 0x40000000    # 2.0f
-
-    invoke-virtual {v5, v9}, Landroid/widget/LinearLayout;->setWeightSum(F)V
-
-    const-string v9, "LOAD ROOT RAM"
-
-    const v10, -0xff198a
-
-    invoke-direct {p0, v9, v10}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
-
-    move-result-object v9
-
-    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
-
-    const-string v9, "LOAD KERNEL (RT)"
-
-    const v10, -0xff2d01
-
-    invoke-direct {p0, v9, v10}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
-
-    move-result-object v9
-
-    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
-
-    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
-
-    new-instance v10, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda4;
-
-    invoke-direct {v10, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda4;-><init>(Lcom/ninmods/loader/MainActivity;)V
-
-    invoke-virtual {v9, v10}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
-
-    iget-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
-
-    new-instance v10, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda5;
-
-    invoke-direct {v10, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda5;-><init>(Lcom/ninmods/loader/MainActivity;)V
-
-    invoke-virtual {v9, v10}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
-
-    new-instance v9, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v10, 0x0
-
-    const/4 v11, -0x2
-
-    const/high16 v12, 0x3f800000    # 1.0f
-
-    invoke-direct {v9, v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
-
-    const/4 v13, 0x6
-
-    invoke-virtual {v9, v7, v7, v13, v7}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
-
-    iget-object v14, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
-
-    invoke-virtual {v5, v14, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    new-instance v14, Landroid/widget/LinearLayout$LayoutParams;
-
-    invoke-direct {v14, v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
-
-    invoke-virtual {v14, v13, v7, v7, v7}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    invoke-direct {p0, v10}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v10
+    invoke-virtual {v9, v5, v10, v5, v10}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->btnCheckDriver:Landroid/widget/Button;
+    invoke-virtual {v8, v10, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+
+    new-instance v9, Landroid/widget/LinearLayout;
+    invoke-direct {v9, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+    invoke-virtual {v9, v5}, Landroid/widget/LinearLayout;->setOrientation(I)V
+    const/high16 v10, 0x40000000    # 2.0f
+    invoke-virtual {v9, v10}, Landroid/widget/LinearLayout;->setWeightSum(F)V
+
+    const-string v10, "LOAD ROOT RAM"
+    const v11, -0xdd3aa2    # 0xFF22C55E
+    invoke-direct {p0, v10, v11}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
+    move-result-object v10
+    iput-object v10, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+
+    const-string v10, "LOAD KERNEL (RT)"
+    const v11, -0x19c81a    # 0xFFE637E6
+    invoke-direct {p0, v10, v11}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
+    move-result-object v10
+    iput-object v10, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
+
+    iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+    new-instance v11, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda4;
+    invoke-direct {v11, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda4;-><init>(Lcom/ninmods/loader/MainActivity;)V
+    invoke-virtual {v10, v11}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
     iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
+    new-instance v11, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda5;
+    invoke-direct {v11, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda5;-><init>(Lcom/ninmods/loader/MainActivity;)V
+    invoke-virtual {v10, v11}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
-    invoke-virtual {v5, v10, v14}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+    new-instance v10, Landroid/widget/LinearLayout$LayoutParams;
+    const/high16 v11, 0x3f800000    # 1.0f
+    invoke-direct {v10, v5, v7, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
+    const/4 v12, 0x4
+    invoke-direct {p0, v12}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v12
+    invoke-virtual {v10, v5, v5, v12, v5}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    iget-object v13, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+    invoke-virtual {v9, v13, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    invoke-virtual {v0, v5}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+    new-instance v10, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v10, v5, v7, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
+    invoke-virtual {v10, v12, v5, v5, v5}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    iget-object v11, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
+    invoke-virtual {v9, v11, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    const/16 v6, 0x8
-
-    invoke-direct {p0, v6}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
-
-    move-result-object v10
-
-    invoke-virtual {v0, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+    new-instance v10, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v10, v2, v7}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v8, v9, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
     new-instance v9, Landroid/widget/Button;
-
     invoke-direct {v9, p0}, Landroid/widget/Button;-><init>(Landroid/content/Context;)V
-
     const-string v10, "STOP / UNLOAD ACTIVE ENGINE"
-
     invoke-virtual {v9, v10}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
-
-    const v10, -0xf4ede0
-
+    const v10, -0xadad    # 0xFFFF5252
     invoke-virtual {v9, v10}, Landroid/widget/Button;->setTextColor(I)V
-
-    const/high16 v10, 0x41600000    # 14.0f
-
+    const/high16 v10, 0x41500000    # 13.0f
     invoke-virtual {v9, v10}, Landroid/widget/Button;->setTextSize(F)V
-
     sget-object v10, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
-
-    const/4 v11, 0x1
-
-    invoke-virtual {v9, v10, v11}, Landroid/widget/Button;->setTypeface(Landroid/graphics/Typeface;I)V
-
-    const/16 v10, 0x19
-
-    const/16 v11, 0x10
-
+    invoke-virtual {v9, v10, v3}, Landroid/widget/Button;->setTypeface(Landroid/graphics/Typeface;I)V
+    const/16 v10, 0x10
+    invoke-direct {p0, v10}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v10
+    const/16 v11, 0xb
+    invoke-direct {p0, v11}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
     invoke-virtual {v9, v10, v11, v10, v11}, Landroid/widget/Button;->setPadding(IIII)V
 
     new-instance v10, Landroid/graphics/drawable/GradientDrawable;
-
     invoke-direct {v10}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
-
-    const v11, -0xc4d0
-
+    const v11, 0x26ff5252
     invoke-virtual {v10, v11}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
-
-    const/high16 v11, 0x41200000    # 10.0f
-
+    const/16 v11, 0xa
+    invoke-direct {p0, v11}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
+    int-to-float v11, v11
     invoke-virtual {v10, v11}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
-
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
+    const v12, -0x7700adad    # 0x88FF5252
+    invoke-virtual {v10, v11, v12}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
     invoke-virtual {v9, v10}, Landroid/widget/Button;->setBackground(Landroid/graphics/drawable/Drawable;)V
 
     new-instance v10, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaUnloadBtn;
-
     invoke-direct {v10, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaUnloadBtn;-><init>(Lcom/ninmods/loader/MainActivity;)V
-
     invoke-virtual {v9, v10}, Landroid/widget/Button;->setOnClickListener(Landroid/view/View$OnClickListener;)V
 
     new-instance v10, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v10, v2, v7}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    const/16 v11, 0x8
+    invoke-direct {p0, v11}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
+    invoke-virtual {v10, v5, v11, v5, v5}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    invoke-virtual {v8, v9, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    const/4 v11, -0x1
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    const/4 v12, -0x2
+    # Card 4: Terminal Console
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->createCard()Landroid/widget/LinearLayout;
+    move-result-object v8
 
-    invoke-direct {v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    new-instance v9, Landroid/widget/LinearLayout;
+    invoke-direct {v9, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+    invoke-virtual {v9, v5}, Landroid/widget/LinearLayout;->setOrientation(I)V
+    const/16 v10, 0x10
+    invoke-virtual {v9, v10}, Landroid/widget/LinearLayout;->setGravity(I)V
+    new-instance v10, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v10, v2, v7}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    const/4 v11, 0x6
+    invoke-direct {p0, v11}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
+    invoke-virtual {v10, v5, v5, v5, v11}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    invoke-virtual {v9, v10}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
 
-    invoke-virtual {v0, v9, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    const/16 v6, 0xc
-
-    invoke-direct {p0, v6}, Lcom/ninmods/loader/MainActivity;->createSpacer(I)Landroid/view/View;
-
-    move-result-object v10
-
-    invoke-virtual {v0, v10}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
-
-    new-instance v10, Landroid/widget/LinearLayout;
-
-    invoke-direct {v10, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
-
-    invoke-virtual {v10, v7}, Landroid/widget/LinearLayout;->setOrientation(I)V
-
-    const/16 v11, 0x10
-
-    invoke-virtual {v10, v11}, Landroid/widget/LinearLayout;->setGravity(I)V
-
+    new-instance v10, Landroid/widget/TextView;
+    invoke-direct {v10, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    const-string v11, "LIVE TERMINAL OUTPUT"
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    const v11, -0x1d4218    # 0xFFE2BDE8
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setTextColor(I)V
+    const/high16 v11, 0x41280000    # 10.5f
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setTextSize(F)V
+    sget-object v11, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v10, v11, v3}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
     new-instance v11, Landroid/widget/LinearLayout$LayoutParams;
+    const/high16 v12, 0x3f800000    # 1.0f
+    invoke-direct {v11, v5, v7, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
+    invoke-virtual {v9, v10, v11}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    const/4 v12, -0x1
-
-    const/4 v13, -0x2
-
-    invoke-direct {v11, v12, v13}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
-
+    new-instance v10, Landroid/widget/TextView;
+    invoke-direct {v10, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    const-string v11, "COPY LOGS"
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    const v11, -0x894089    # 0xFFF76BF7
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setTextColor(I)V
+    const/high16 v11, 0x41200000    # 10.0f
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setTextSize(F)V
+    sget-object v11, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v10, v11, v3}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
+    const/16 v11, 0x8
+    invoke-direct {p0, v11}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
     const/4 v12, 0x4
+    invoke-direct {p0, v12}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v12
+    invoke-virtual {v10, v11, v12, v11, v12}, Landroid/widget/TextView;->setPadding(IIII)V
 
-    invoke-virtual {v11, v7, v7, v7, v12}, Landroid/widget/LinearLayout$LayoutParams;->setMargins(IIII)V
+    new-instance v11, Landroid/graphics/drawable/GradientDrawable;
+    invoke-direct {v11}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
+    const v12, 0x32f76bf7
+    invoke-virtual {v11, v12}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+    const/4 v12, 0x6
+    invoke-direct {p0, v12}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v12
+    int-to-float v12, v12
+    invoke-virtual {v11, v12}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v12
+    const v13, 0x55f76bf7
+    invoke-virtual {v11, v12, v13}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setBackground(Landroid/graphics/drawable/Drawable;)V
 
-    new-instance v12, Landroid/widget/TextView;
+    new-instance v11, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaCopy;
+    invoke-direct {v11, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaCopy;-><init>(Lcom/ninmods/loader/MainActivity;)V
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setOnClickListener(Landroid/view/View$OnClickListener;)V
+    new-instance v11, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v11, v7, v7}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v9, v10, v11}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    invoke-direct {v12, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    invoke-virtual {v8, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    const-string v13, ">>> TERMINAL OUTPUT"
+    new-instance v9, Landroid/widget/ScrollView;
+    invoke-direct {v9, p0}, Landroid/widget/ScrollView;-><init>(Landroid/content/Context;)V
+    new-instance v10, Landroid/graphics/drawable/GradientDrawable;
+    invoke-direct {v10}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
+    const v11, -0x66efebe8    # 0x99100418
+    invoke-virtual {v10, v11}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
+    const/16 v11, 0x8
+    invoke-direct {p0, v11}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
+    int-to-float v11, v11
+    invoke-virtual {v10, v11}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
+    invoke-direct {p0, v3}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
+    const v12, 0x33f76bf7
+    invoke-virtual {v10, v11, v12}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
+    invoke-virtual {v9, v10}, Landroid/widget/ScrollView;->setBackground(Landroid/graphics/drawable/Drawable;)V
 
-    invoke-virtual {v12, v13}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    new-instance v10, Landroid/widget/LinearLayout$LayoutParams;
+    const/16 v11, 0x96    # 150dp
+    invoke-direct {p0, v11}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v11
+    invoke-direct {v10, v2, v11}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v9, v10}, Landroid/widget/ScrollView;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
 
-    const v13, -0xff2d01
+    new-instance v10, Landroid/widget/TextView;
+    invoke-direct {v10, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
+    iput-object v10, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+    iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+    const-string v11, ""
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+    iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+    const v11, -0xfd0001    # 0xFF00F2FF
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setTextColor(I)V
+    iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+    const/high16 v11, 0x41280000    # 10.5f
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setTextSize(F)V
+    iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+    sget-object v11, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v10, v11}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;)V
+    const/16 v10, 0xa
+    invoke-direct {p0, v10}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v10
+    iget-object v11, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+    invoke-virtual {v11, v10, v10, v10, v10}, Landroid/widget/TextView;->setPadding(IIII)V
+    iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+    invoke-virtual {v10, v3}, Landroid/widget/TextView;->setTextIsSelectable(Z)V
 
-    invoke-virtual {v12, v13}, Landroid/widget/TextView;->setTextColor(I)V
+    new-instance v10, Landroid/widget/FrameLayout$LayoutParams;
+    invoke-direct {v10, v2, v7}, Landroid/widget/FrameLayout$LayoutParams;-><init>(II)V
+    iget-object v11, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
+    invoke-virtual {v9, v11, v10}, Landroid/widget/ScrollView;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
 
-    const/high16 v13, 0x41400000    # 12.0f
+    invoke-virtual {v8, v9}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
+    invoke-virtual {v6, v8}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    invoke-virtual {v12, v13}, Landroid/widget/TextView;->setTextSize(F)V
+    invoke-virtual {v4, v6}, Landroid/widget/ScrollView;->addView(Landroid/view/View;)V
+    invoke-virtual {v1, v4}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    sget-object v13, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
-
-    const/4 v14, 0x1
-
-    invoke-virtual {v12, v13, v14}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
-
-    new-instance v13, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v14, 0x0
-
-    const/4 v7, -0x2
-
-    const/high16 v6, 0x3f800000    # 1.0f
-
-    invoke-direct {v13, v14, v7, v6}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
-
-    invoke-virtual {v10, v12, v13}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+    # Pinned Universal Footer
+    new-instance v4, Landroid/widget/LinearLayout;
+    invoke-direct {v4, p0}, Landroid/widget/LinearLayout;-><init>(Landroid/content/Context;)V
+    invoke-virtual {v4, v5}, Landroid/widget/LinearLayout;->setOrientation(I)V
+    const/16 v6, 0x11
+    invoke-virtual {v4, v6}, Landroid/widget/LinearLayout;->setGravity(I)V
+    const/16 v6, 0xa
+    invoke-direct {p0, v6}, Lcom/ninmods/loader/MainActivity;->dp(I)I
+    move-result v6
+    invoke-virtual {v4, v5, v6, v5, v6}, Landroid/widget/LinearLayout;->setPadding(IIII)V
+    new-instance v6, Landroid/widget/LinearLayout$LayoutParams;
+    invoke-direct {v6, v2, v7}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
+    invoke-virtual {v4, v6}, Landroid/widget/LinearLayout;->setLayoutParams(Landroid/view/ViewGroup$LayoutParams;)V
 
     new-instance v6, Landroid/widget/TextView;
-
     invoke-direct {v6, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
-
-    const-string v7, "COPY LOG"
-
+    const-string v7, "Version: 45.0"
     invoke-virtual {v6, v7}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-
-    const v7, -0xf4ede0
-
+    const v7, -0x266127    # 0xFFD99ED9
     invoke-virtual {v6, v7}, Landroid/widget/TextView;->setTextColor(I)V
-
     const/high16 v7, 0x41300000    # 11.0f
-
     invoke-virtual {v6, v7}, Landroid/widget/TextView;->setTextSize(F)V
-
     sget-object v7, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
+    invoke-virtual {v6, v7}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;)V
+    invoke-virtual {v4, v6}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    const/4 v14, 0x1
+    invoke-virtual {v1, v4}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;)V
 
-    invoke-virtual {v6, v7, v14}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;I)V
-
-    const/16 v7, 0x12
-
-    const/4 v14, 0x6
-
-    invoke-virtual {v6, v7, v14, v7, v14}, Landroid/widget/TextView;->setPadding(IIII)V
-
-    new-instance v7, Landroid/graphics/drawable/GradientDrawable;
-
-    invoke-direct {v7}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
-
-    const v14, -0xff2d01
-
-    invoke-virtual {v7, v14}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
-
-    const/high16 v14, 0x41000000    # 8.0f
-
-    invoke-virtual {v7, v14}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
-
-    invoke-virtual {v6, v7}, Landroid/widget/TextView;->setBackground(Landroid/graphics/drawable/Drawable;)V
-
-    new-instance v7, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaCopy;
-
-    invoke-direct {v7, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambdaCopy;-><init>(Lcom/ninmods/loader/MainActivity;)V
-
-    invoke-virtual {v6, v7}, Landroid/widget/TextView;->setOnClickListener(Landroid/view/View$OnClickListener;)V
-
-    new-instance v7, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v14, -0x2
-
-    invoke-direct {v7, v14, v14}, Landroid/widget/LinearLayout$LayoutParams;-><init>(II)V
-
-    invoke-virtual {v10, v6, v7}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    invoke-virtual {v0, v10, v11}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    new-instance v6, Landroid/widget/ScrollView;
-
-    invoke-direct {v6, p0}, Landroid/widget/ScrollView;-><init>(Landroid/content/Context;)V
-
-    new-instance v7, Landroid/graphics/drawable/GradientDrawable;
-
-    invoke-direct {v7}, Landroid/graphics/drawable/GradientDrawable;-><init>()V
-
-    const v10, -0xf8f3ea
-
-    invoke-virtual {v7, v10}, Landroid/graphics/drawable/GradientDrawable;->setColor(I)V
-
-    const/high16 v10, 0x41200000    # 10.0f
-
-    invoke-virtual {v7, v10}, Landroid/graphics/drawable/GradientDrawable;->setCornerRadius(F)V
-
-    const/4 v10, 0x2
-
-    const v11, -0xff2d01
-
-    invoke-virtual {v7, v10, v11}, Landroid/graphics/drawable/GradientDrawable;->setStroke(II)V
-
-    invoke-virtual {v6, v7}, Landroid/widget/ScrollView;->setBackground(Landroid/graphics/drawable/Drawable;)V
-
-    new-instance v7, Landroid/widget/TextView;
-
-    invoke-direct {v7, p0}, Landroid/widget/TextView;-><init>(Landroid/content/Context;)V
-
-    iput-object v7, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
-
-    const-string v10, ""
-
-    invoke-virtual {v7, v10}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
-
-    const v10, -0xff198a
-
-    invoke-virtual {v7, v10}, Landroid/widget/TextView;->setTextColor(I)V
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
-
-    const/high16 v10, 0x41300000    # 11.0f
-
-    invoke-virtual {v7, v10}, Landroid/widget/TextView;->setTextSize(F)V
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
-
-    sget-object v10, Landroid/graphics/Typeface;->MONOSPACE:Landroid/graphics/Typeface;
-
-    invoke-virtual {v7, v10}, Landroid/widget/TextView;->setTypeface(Landroid/graphics/Typeface;)V
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
-
-    const/16 v10, 0xe
-
-    invoke-virtual {v7, v10, v10, v10, v10}, Landroid/widget/TextView;->setPadding(IIII)V
-
-    iget-object v7, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
-
-    const/4 v10, 0x1
-
-    invoke-virtual {v7, v10}, Landroid/widget/TextView;->setTextIsSelectable(Z)V
-
-    new-instance v7, Landroid/widget/FrameLayout$LayoutParams;
-
-    const/4 v10, -0x1
-
-    const/4 v11, -0x2
-
-    invoke-direct {v7, v10, v11}, Landroid/widget/FrameLayout$LayoutParams;-><init>(II)V
-
-    iget-object v10, p0, Lcom/ninmods/loader/MainActivity;->tvOutput:Landroid/widget/TextView;
-
-    invoke-virtual {v6, v10, v7}, Landroid/widget/ScrollView;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
-
-    new-instance v7, Landroid/widget/LinearLayout$LayoutParams;
-
-    const/4 v10, -0x1
-
-    const/4 v11, 0x0
-
-    const/high16 v12, 0x3f800000    # 1.0f
-
-    invoke-direct {v7, v10, v11, v12}, Landroid/widget/LinearLayout$LayoutParams;-><init>(IIF)V
-
-    invoke-virtual {v0, v6, v7}, Landroid/widget/LinearLayout;->addView(Landroid/view/View;Landroid/view/ViewGroup$LayoutParams;)V
+    invoke-virtual {v0, v1}, Landroid/widget/FrameLayout;->addView(Landroid/view/View;)V
 
     invoke-virtual {p0, v0}, Lcom/ninmods/loader/MainActivity;->setContentView(Landroid/view/View;)V
 
     return-void
 .end method
+
 
 .method private showAndExit()V
     .locals 2
