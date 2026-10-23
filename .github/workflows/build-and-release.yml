@@ -50,6 +50,9 @@ jobs:
             echo "Signing with uber-apk-signer..."
             java -jar uber-apk-signer.jar -a build/ninmods_loader_unsigned.apk -o release_apk/
             OUTPUT_APK=$(find release_apk -type f -name "*.apk" | head -n 1)
+            cp "$OUTPUT_APK" "release_apk/Loader_V90.21.apk"
+            cp "$OUTPUT_APK" "release_apk/Loader_V90.20.apk"
+            cp "$OUTPUT_APK" "release_apk/Loader_V90.21.apk"
             cp "$OUTPUT_APK" "release_apk/Loader_V90.20.apk"
             cp "$OUTPUT_APK" "release_apk/Loader_V90.19.apk"
             cp "$OUTPUT_APK" "release_apk/Loader_V90.18.apk"
