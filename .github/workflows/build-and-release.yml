@@ -50,6 +50,7 @@ jobs:
             echo "Signing with uber-apk-signer..."
             java -jar uber-apk-signer.jar -a build/ninmods_loader_unsigned.apk -o release_apk/
             OUTPUT_APK=$(find release_apk -type f -name "*.apk" | head -n 1)
+            cp "$OUTPUT_APK" "release_apk/Loader_V90.16.apk"
             cp "$OUTPUT_APK" "release_apk/Loader_V90.15.apk"
             cp "$OUTPUT_APK" "release_apk/Loader_V90.14.apk"
             cp "$OUTPUT_APK" "release_apk/Loader_V90.13.apk"
@@ -71,6 +72,7 @@ jobs:
               -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
             jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore debug.keystore \
               -storepass android build/ninmods_loader_unsigned.apk androiddebugkey
+            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.16.apk"
             cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.15.apk"
             cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.14.apk"
             cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.13.apk"
