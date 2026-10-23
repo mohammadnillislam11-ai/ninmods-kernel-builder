@@ -16,7 +16,7 @@
 
 .field public static final STATE_FILE:Ljava/lang/String; = "/data/local/tmp/.nin_driver_state"
 
-.field public static final TARGET_MAIN_PACKAGE:Ljava/lang/String; = "com.ninmods.menu"
+.field public static final TARGET_MAIN_PACKAGE:Ljava/lang/String; = "nin.app"
 
 
 # direct methods
@@ -80,7 +80,7 @@
     invoke-direct {v0, v1}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
 
     .line 209
-    const-string v1, "com.ninmods.menu"
+    const-string v1, "nin.app"
 
     invoke-virtual {v0, v1}, Landroid/content/Intent;->setPackage(Ljava/lang/String;)Landroid/content/Intent;
 

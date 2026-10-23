@@ -59,7 +59,7 @@
 
     iget-object v0, v0, Lcom/ninmods/loader/EngineManager$3;->val$callback:Lcom/ninmods/loader/EngineManager$OutputCallback;
 
-    const-string v1, "[+] State synced with com.ninmods.menu (OFFLINE)"
+    const-string v1, "[+] State synced with nin.app (OFFLINE)"
 
     invoke-interface {v0, v1}, Lcom/ninmods/loader/EngineManager$OutputCallback;->onOutput(Ljava/lang/String;)V
 
