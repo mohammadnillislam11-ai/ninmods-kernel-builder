@@ -106,7 +106,7 @@
     invoke-virtual {v1, v2}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 
     .line 171
-    const-string v2, "am broadcast -a com.ninmods.action.DRIVER_STATE --es mode NONE --es status STOPPED -p nin.app 2>/dev/null\n"
+    const-string v2, "am broadcast -a com.ninmods.action.DRIVER_STATE --es mode NONE --es status STOPPED -p com.ninmods.main 2>/dev/null\n"
 
     invoke-virtual {v1, v2}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 

@@ -10,6 +10,7 @@
     <permission android:name="com.ninmods.loader.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" android:protectionLevel="signature"/>
     <uses-permission android:name="com.ninmods.loader.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"/>
     <queries>
+        <package android:name="com.ninmods.main"/>
         <package android:name="nin.app"/>
         <package android:name="com.dts.freefireth"/>
         <package android:name="com.dts.freefiremax"/>

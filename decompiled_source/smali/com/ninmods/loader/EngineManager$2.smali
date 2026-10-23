@@ -91,7 +91,7 @@
     invoke-virtual {v1, v2}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 
     .line 124
-    const-string v2, "am broadcast -a com.ninmods.action.DRIVER_STATE --es mode KERNEL_RT --es status ACTIVE -p nin.app 2>/dev/null\n"
+    const-string v2, "am broadcast -a com.ninmods.action.DRIVER_STATE --es mode KERNEL_RT --es status ACTIVE -p com.ninmods.main 2>/dev/null\n"
 
     invoke-virtual {v1, v2}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 
