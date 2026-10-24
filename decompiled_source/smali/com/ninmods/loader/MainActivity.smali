@@ -207,6 +207,8 @@
     .locals 1
     .param p1, "msg"    # Ljava/lang/String;
 
+    invoke-static {p1}, Lcom/ninmods/loader/MainActivity;->writeLogLine(Ljava/lang/String;)V
+
     .line 592
     new-instance v0, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda6;
 
@@ -1560,7 +1562,9 @@
 
     move-result-object v3
 
-    invoke-virtual {v3, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const-string v4, " 2>&1\n"
+
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object v3
 
@@ -1798,7 +1802,7 @@
     const-string v1, "su"
 
     :try_start_0
-    const-string v2, "NODES=''; for n in /dev/BYNb /dev/mem_tool /proc/uevents_records /proc/sched_debug; do if [ -e \"$n\" ]; then NODES=\"$NODES $n\"; fi; done; if [ -n \"$NODES\" ]; then echo \"[+] ACTIVE DRIVER DETECTED\"; echo \"[+] Device Nodes:\"; ls -l $NODES; echo \"[+] Kernel Modules in /proc/modules:\"; cat /proc/modules 2>/dev/null | grep -E \"BYNb|mem_tool|uevents|driver|nh\" | head -n 5; echo \"RESULT=DRIVER_ACTIVE\"; else echo \"[-] NO ACTIVE DRIVER FOUND\"; echo \"[-] Checked: /dev/BYNb, /dev/mem_tool, /proc/uevents_records\"; echo \"[-] Kernel Error Telemetry (dmesg):\"; dmesg 2>/dev/null | grep -iE \"module_sig|PKCS|disagree|vermagic|failed\" | tail -n 5; echo \"RESULT=DRIVER_INACTIVE\"; fi"
+    const-string v2, "NODES=''; for n in /dev/BYNb /dev/mem_tool /proc/uevents_records; do if [ -e \"$n\" ]; then NODES=\"$NODES $n\"; fi; done; for s in /sys/class/mem_tool_class/*/dev; do if [ -e \"$s\" ]; then NODES=\"$NODES $s\"; fi; done; MODS=$(cat /proc/modules 2>/dev/null | grep -E \"BYNb|mem_tool|uevents|driver|nh|5.10\"); if [ -n \"$NODES\" ] || [ -n \"$MODS\" ]; then echo \"[+] ACTIVE DRIVER DETECTED\"; if [ -n \"$NODES\" ]; then echo \"[+] Device Endpoints:\"; ls -l $NODES; fi; if [ -n \"$MODS\" ]; then echo \"[+] Active Kernel Modules:\"; echo \"$MODS\" | head -n 5; fi; echo \"RESULT=DRIVER_ACTIVE\"; else echo \"[-] NO ACTIVE DRIVER FOUND\"; echo \"[-] Checked: /dev/BYNb, /dev/mem_tool, /proc/uevents_records\"; echo \"[-] Kernel Error Telemetry (dmesg):\"; dmesg 2>/dev/null | grep -iE \"module_sig|PKCS|disagree|vermagic|failed\" | tail -n 5; echo \"RESULT=DRIVER_INACTIVE\"; fi"
 
     invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
 
@@ -2678,7 +2682,10 @@
 
     invoke-virtual {v1, v0}, Landroid/content/ClipboardManager;->setPrimaryClip(Landroid/content/ClipData;)V
 
-    const-string v0, "Terminal logs copied to clipboard"
+    invoke-interface {v0}, Ljava/lang/CharSequence;->toString()Ljava/lang/String;
+    move-result-object v2
+    invoke-static {v2}, Lcom/ninmods/loader/MainActivity;->writeLogLine(Ljava/lang/String;)V
+    const-string v0, "Terminal logs copied and saved to /sdcard/Download/ninmods_driver_loader.log"
 
     const/4 v1, 0x0
 
@@ -3386,6 +3393,8 @@
 
     iput-object v0, p0, Lcom/ninmods/loader/MainActivity;->mainHandler:Landroid/os/Handler;
 
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->initDiagnosticsLog()V
+
     invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->setupUI()V
 
     invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->checkAndRequestPermissions()V
@@ -3536,5 +3545,99 @@
     :cond_del_self
     invoke-virtual {p0}, Ljava/io/File;->delete()Z
 
+    return-void
+.end method
+
+.method public static writeLogLine(Ljava/lang/String;)V
+    .locals 5
+    .param p0, "line"    # Ljava/lang/String;
+
+    :try_start_wlog
+    if-nez p0, :cond_wlog_notnull
+    return-void
+
+    :cond_wlog_notnull
+    new-instance v0, Ljava/io/File;
+    const-string v1, "/sdcard/Download"
+    invoke-direct {v0, v1}, Ljava/io/File;-><init>(Ljava/lang/String;)V
+    invoke-virtual {v0}, Ljava/io/File;->exists()Z
+    move-result v1
+    if-nez v1, :cond_wlog_dir
+    invoke-virtual {v0}, Ljava/io/File;->mkdirs()Z
+
+    :cond_wlog_dir
+    new-instance v1, Ljava/io/File;
+    const-string v2, "ninmods_driver_loader.log"
+    invoke-direct {v1, v0, v2}, Ljava/io/File;-><init>(Ljava/io/File;Ljava/lang/String;)V
+    new-instance v2, Ljava/io/FileWriter;
+    const/4 v3, 0x1
+    invoke-direct {v2, v1, v3}, Ljava/io/FileWriter;-><init>(Ljava/io/File;Z)V
+    new-instance v3, Ljava/lang/StringBuilder;
+    invoke-direct {v3}, Ljava/lang/StringBuilder;-><init>()V
+    invoke-virtual {v3, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v3
+    const-string v4, "\n"
+    invoke-virtual {v3, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v3
+    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v3
+    invoke-virtual {v2, v3}, Ljava/io/FileWriter;->write(Ljava/lang/String;)V
+    invoke-virtual {v2}, Ljava/io/FileWriter;->flush()V
+    invoke-virtual {v2}, Ljava/io/FileWriter;->close()V
+    :try_end_wlog
+    .catch Ljava/lang/Throwable; {:try_start_wlog .. :try_end_wlog} :catch_wlog
+
+    :catch_wlog
+    return-void
+.end method
+
+.method private initDiagnosticsLog()V
+    .locals 3
+
+    :try_start_init_diag
+    new-instance v0, Ljava/lang/StringBuilder;
+    invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+    const-string v1, "\n==================================================\nNINMODS DRIVER LOADER - LOGGING SESSION\nDevice: "
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    sget-object v1, Landroid/os/Build;->MANUFACTURER:Ljava/lang/String;
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    const-string v1, " "
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    sget-object v1, Landroid/os/Build;->MODEL:Ljava/lang/String;
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    const-string v1, "\nAndroid: "
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    sget-object v1, Landroid/os/Build$VERSION;->RELEASE:Ljava/lang/String;
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    const-string v1, " (SDK "
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    sget v1, Landroid/os/Build$VERSION;->SDK_INT:I
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+    move-result-object v0
+    const-string v1, ")\nKernel: "
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    const-string v1, "os.version"
+    invoke-static {v1}, Ljava/lang/System;->getProperty(Ljava/lang/String;)Ljava/lang/String;
+    move-result-object v1
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    const-string v1, "\n=================================================="
+    invoke-virtual {v0, v1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v0
+    invoke-virtual {v0}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v0
+    invoke-static {v0}, Lcom/ninmods/loader/MainActivity;->writeLogLine(Ljava/lang/String;)V
+    :try_end_init_diag
+    .catch Ljava/lang/Throwable; {:try_start_init_diag .. :try_end_init_diag} :catch_init_diag
+
+    :catch_init_diag
     return-void
 .end method
