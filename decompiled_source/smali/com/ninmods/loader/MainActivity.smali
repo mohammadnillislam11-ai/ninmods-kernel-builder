@@ -2,9 +2,6 @@
 .super Landroid/app/Activity;
 .source "MainActivity.java"
 
-# interfaces
-.implements Lcom/ninmods/loader/EngineManager$OutputCallback;
-
 
 # static fields
 .field private static final PERMISSION_REQUEST_CODE:I = 0x64
@@ -180,44 +177,7 @@
 .end method
 
 
-.method public static synthetic $r8$lambda$copyLogs(Lcom/ninmods/loader/MainActivity;Landroid/view/View;)V
-    .locals 0
 
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->copyTerminalOutput()V
-
-    return-void
-.end method
-
-.method public static synthetic $r8$lambda$clickUnload(Lcom/ninmods/loader/MainActivity;Landroid/view/View;)V
-    .locals 4
-
-    iget-object v1, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
-
-    iget-object v2, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
-
-    iget-object v3, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    invoke-static {p0, p0, v1, v2, v3}, Lcom/ninmods/loader/EngineManager;->stopAllEngines(Landroid/app/Activity;Lcom/ninmods/loader/EngineManager$OutputCallback;Landroid/widget/Button;Landroid/widget/Button;Landroid/widget/TextView;)V
-
-    return-void
-.end method
-
-.method public onOutput(Ljava/lang/String;)V
-    .locals 0
-    .param p1, "msg"    # Ljava/lang/String;
-
-    invoke-direct {p0, p1}, Lcom/ninmods/loader/MainActivity;->appendOutput(Ljava/lang/String;)V
-
-    return-void
-.end method
-
-.method public static synthetic $r8$lambda$executeUnload(Lcom/ninmods/loader/MainActivity;)V
-    .locals 0
-
-    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->executeUnloadDriver()V
-
-    return-void
-.end method
 
 .method public constructor <init>()V
     .locals 1
@@ -1430,6 +1390,14 @@
 
     .line 568
     :cond_0
+    const-string v0, "QX"
+
+    invoke-virtual {p2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_1
+
     const-string v0, "RT"
 
     invoke-virtual {p2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
@@ -1438,13 +1406,20 @@
 
     if-eqz v0, :cond_3
 
-    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
+    .line 569
+    :cond_1
+    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
 
-    iget-object v1, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
+    const-string v1, "Driver Status: Active"
 
-    iget-object v2, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
 
-    invoke-static {p0, p0, v0, v1, v2}, Lcom/ninmods/loader/EngineManager;->onKernelLoaded(Landroid/app/Activity;Lcom/ninmods/loader/EngineManager$OutputCallback;Landroid/widget/Button;Landroid/widget/Button;Landroid/widget/TextView;)V
+    .line 570
+    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
+
+    const v1, -0xff198a
+
+    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextColor(I)V
 
     goto :goto_0
 
@@ -1622,7 +1597,7 @@
     invoke-virtual {v2, v3}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 
     .line 543
-    const-string v3, "echo \"EXIT_CODE=$?\"\nchmod 666 /dev/BYNb* /dev/sched_debug /dev/uevents_records /dev/health_storage_service_alloc 2>/dev/null; ln -sf /dev/BYNb /dev/health_storage_service_alloc 2>/dev/null; setenforce 0 2>/dev/null\n"
+    const-string v3, "echo \"EXIT_CODE=$?\"\n"
 
     invoke-virtual {v2, v3}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 
@@ -2327,16 +2302,13 @@
 .end method
 
 .method private synthetic lambda$setupUI$2(Landroid/view/View;)V
-    .locals 4
+    .locals 1
     .param p1, "v"    # Landroid/view/View;
 
-    iget-object v1, p0, Lcom/ninmods/loader/MainActivity;->btnRT:Landroid/widget/Button;
+    .line 228
+    const-string v0, "QX"
 
-    iget-object v2, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
-
-    iget-object v3, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    invoke-static {p0, p0, v1, v2, v3}, Lcom/ninmods/loader/EngineManager;->startRootDaemon(Landroid/app/Activity;Lcom/ninmods/loader/EngineManager$OutputCallback;Landroid/widget/Button;Landroid/widget/Button;Landroid/widget/TextView;)V
+    invoke-direct {p0, v0}, Lcom/ninmods/loader/MainActivity;->runDriver(Ljava/lang/String;)V
 
     return-void
 .end method
@@ -2879,7 +2851,7 @@
 
     const-string v2, "-c"
 
-    const-string v3, "rmmod 5.10_A12 2>/dev/null; rmmod nh 2>/dev/null; rmmod mem_tool 2>/dev/null; rmmod health_storage_service_alloc 2>/dev/null; rmmod BYNb 2>/dev/null; rmmod sched_debug 2>/dev/null; for m in $(cat /proc/modules 2>/dev/null | awk '{print $1}'); do case \"$m\" in *5.10*|*nh*|*mem_tool*|*driver*|*rt*|*sched_debug*|*BYNb*) rmmod \"$m\" 2>/dev/null;; esac; done; rm -f /dev/health_storage_service_alloc 2>/dev/null; rm -f /data/nh.ko 2>/dev/null; rm -f /data/local/tmp/*.ko 2>/dev/null; pkill -f 'Driver.sh' 2>/dev/null; pkill -f 'QX' 2>/dev/null; pkill -f 'temp' 2>/dev/null"
+    const-string v3, "rmmod 5.10_A12 2>/dev/null; rmmod nh 2>/dev/null; rmmod mem_tool 2>/dev/null; rmmod BYNb 2>/dev/null; rmmod sched_debug 2>/dev/null; for m in $(cat /proc/modules 2>/dev/null | awk '{print $1}'); do case \"$m\" in *5.10*|*nh*|*mem_tool*|*driver*|*rt*|*sched_debug*|*BYNb*) rmmod \"$m\" 2>/dev/null;; esac; done; rm -f /data/nh.ko 2>/dev/null; rm -f /data/local/tmp/*.ko 2>/dev/null; pkill -f 'Driver.sh' 2>/dev/null; pkill -f 'QX' 2>/dev/null; pkill -f 'temp' 2>/dev/null"
 
     filled-new-array {v1, v2, v3}, [Ljava/lang/String;
 
@@ -3199,13 +3171,13 @@
     const/high16 v10, 0x40000000    # 2.0f
     invoke-virtual {v9, v10}, Landroid/widget/LinearLayout;->setWeightSum(F)V
 
-    const-string v10, "LOAD ROOT RAM"
+    const-string v10, "QX Auto Drivers Load"
     const v11, -0xdd3aa2    # 0xFF22C55E
     invoke-direct {p0, v10, v11}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
     move-result-object v10
     iput-object v10, p0, Lcom/ninmods/loader/MainActivity;->btnQX:Landroid/widget/Button;
 
-    const-string v10, "LOAD KERNEL (RT)"
+    const-string v10, "RT Auto Drivers Load"
     const v11, -0x19c81a    # 0xFFE637E6
     invoke-direct {p0, v10, v11}, Lcom/ninmods/loader/MainActivity;->createPurpleButton(Ljava/lang/String;I)Landroid/widget/Button;
     move-result-object v10

@@ -1,0 +1,218 @@
+# ==============================================================================
+# NINMODS — DRIVER & SRC MASTER ARCHITECTURE SPECIFICATION (.plan)
+# ==============================================================================
+# এই ডকুমেন্টটি যেকোনো AI এজেন্ট বা সিস্টেম ডেভেলপারের জন্য প্রজেক্টের সম্পূর্ণ 
+# কার্নেল ড্রাইভার লোডার (`Kernel-Driver-main`) এবং মেইন SRC অ্যাপ (`nin`)-এর 
+# নিখুঁত কানেকশন পাইপলাইন ও এডিটিং ব্লুপ্রিন্ট হিসেবে কাজ করবে।
+# ==============================================================================
+
+## সূচিপত্র (Table of Contents)
+1. সিস্টেম ওভারভিউ ও মূল উদ্দেশ্য (Executive Overview)
+2. সম্পূর্ণ ফাইল ইনভেন্টরি ও নিখুঁত গ্র্যাপিং (Full File Inventory & Grep Map)
+3. ড্রাইভার লোডার ও SRC প্রজেক্টের ৪-স্তরের কানেকশন পাইপলাইন (4-Layer Interconnection Pipeline)
+4. মেমরি ও IOCTL স্ট্রাকচার স্পেসিফিকেশন (Memory & IOCTL Binary Interface)
+5. আইপিসি চ্যানেল আর্কিটেকচার (Dual-Channel Real-Time IPC: UNIX Socket + TCP)
+6. অফসেট ও নেটিভ আর্কিটেকচার নীতি (Central Offsets & Native-First ESP)
+7. যেকোনো এজেন্টের জন্য ধাপে ধাপে এডিটিং ব্লুপ্রিন্ট (Editing Blueprint for Future Agents)
+8. অলঙ্ঘনীয় নিয়ামাবলী ও চেক-লিস্ট (Non-Negotiable Rules & Verification Checklist)
+
+---
+
+## ১. সিস্টেম ওভারভিউ ও মূল উদ্দেশ্য (Executive Overview)
+এই প্রজেক্টটি দুটি প্রধান সাব-সিস্টেম নিয়ে গঠিত:
+1. **Driver Loader (`Kernel-Driver-main`):**
+   - একটি রুট-এনাবল্ড অ্যান্ড্রয়েড টুল যা ব্যবহারকারীর ডিভাইসের কার্নেল ভার্সন (যেমন 4.14, 4.19, 5.4, 5.10, 5.15, 6.1) স্বয়ংক্রিয়ভাবে ডিটেক্ট করে।
+   - সঠিক AArch64 কার্নেল মডিউল (`.ko`) অথবা রুট মেমরি ডেমন লোড করে।
+   - কার্নেল রিং-০ (Ring 0) লেভেলে `/dev/mem_tool`, `/dev/BYNb`, এবং `/sys/class/mem_tool_class` নোড তৈরি ও উন্মুক্ত করে।
+2. **Main SRC Game Hack Engine (`nin`):**
+   - সি++ নেটিভ ইঞ্জিন যা ওপেন হওয়া ক্যারেক্টার ডিভাইস (`/dev/mem_tool`, `/dev/BYNb`) অথবা ফলব্যাক হিসেবে `process_vm_readv`-এর মাধ্যমে টার্গেট গেম প্রসেসের মেমরি রিড/রাইট করে।
+   - গেমের সমস্ত এন্টিটি লিস্ট, ক্যামেরা ম্যাট্রিক্স, ডেরিভেশন এবং ওয়ার্ল্ড-টু-স্ক্রিন (World-To-Screen) প্রজেকশন নেটিভ সি++-এ ক্যালকুলেট করে।
+   - কোটলিন ইউআই ওভারলে সার্ভিসের (`EspOverlayService.kt`) মাধ্যমে স্ক্রিনে ইএসপি বক্স, হেল্থবার ও কঙ্কাল ফ্রেশভাবে রেন্ডার করে।
+
+---
+
+## ২. সম্পূর্ণ ফাইল ইনভেন্টরি ও নিখুঁত গ্র্যাপিং (Full File Inventory & Grep Map)
+
+### (ক) Driver Loader প্রজেক্ট (`c:\Users\Sajala\Documents\mods\Kernel-Driver-main`)
+* **`decompiled_source/AndroidManifest.xml`**:
+  - প্যাকেজ: `com.ninmods.loader`
+  - পারমিশন: `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE`, `MANAGE_EXTERNAL_STORAGE`, `POST_NOTIFICATIONS`
+  - মেইন অ্যাক্টিভিটি: `.MainActivity` (Hardware Accelerated, Portrait)
+* **`decompiled_source/apktool.yml`**:
+  - Apktool বিল্ড কনফিগারেশন, `minSdkVersion: 21`, `targetSdkVersion: 33`
+* **`decompiled_source/assets/Driver.sh`** (৪৫৩,৬২৪ বাইট):
+  - এটি কোনো শেল স্ক্রিপ্ট নয়; এটি একটি কম্পাইল্ড **AArch64 ELF Executable Binary**।
+  - এটি কার্নেল ইন্টারফেস চেকার, ভারম্যাজিক ইনস্পেক্টর এবং লোডার ব্যাকবোন হিসেবে কাজ করে।
+* **`decompiled_source/assets/Kernel_Drivers.zip`** (৫,৪৭১,২০৩ বাইট):
+  - এর ভেতর মোট **৭৫টি আসল ড্রাইভার** সংরক্ষিত:
+    * **৩০টি RT Drivers (`.sh`)**: `RT【Dev】Driver` (২৩টি) + `RT【proc】Driver` (৭টি)।
+    * **৪৫টি QX Drivers (`.ko.sh`)**: `QX_kernel driver 5.0+`, `8.2+`, `9.4+`, `11.4+` (OPPO/Realme/OnePlus/Xiaomi/Pixel 4.14, 4.19, 5.4, 5.10, 5.15, 6.1)।
+* **`decompiled_source/smali/com/ninmods/loader/MainActivity.smali`** (৩,৬৪৬ লাইন):
+  - `checkRoot()`: `su` অ্যাক্সেস যাচাই।
+  - `checkAndRequestPermissions()`: অ্যান্ড্রয়েড ১৩+ নোটিফিকেশন ও স্টোরেজ পারমিশন হ্যান্ডলার।
+  - `detectKernel()`: `uname -r` এক্সিকিউট করে কার্নেল ভার্সন (যেমন `4.19.157`) ডিটেক্ট করে।
+  - `extractDrivers()`: `assets/Kernel_Drivers.zip` এক্সট্র্যাক্ট করে অ্যাপের প্রাইভেট ডিরেক্টরিতে।
+  - `copyDriverChecker()`: `assets/Driver.sh`-কে `filesDir/Driver.sh`-এ কপি ও `chmod 777` করে।
+  - `runDriver(String mode)`: "QX" অথবা "RT" মোড অনুযায়ী ম্যাচিং ড্রাইভার সিলেক্ট করে রুট সেলে এক্সিকিউট করে।
+  - `executeDriver(String scriptPath)`: রুট সেলে ড্রাইভার স্ক্রিপ্ট রান করে এবং লাইভ টার্মিনাল আউটপুট দেখায়।
+  - `unloadDriver()` & `executeUnloadDriver()`: মেমরি ও কার্নেল মডিউল আনলোড এবং ক্লিনআপ করে।
+* **`decompiled_source/smali/com/ninmods/loader/MainActivity$$ExternalSyntheticLambda0..17.smali`**:
+  - UI ক্লিক লিসেনার, রান-অন-ইউআই-থ্রেড ডিসপ্যাচার ও ব্যাকগ্রাউন্ড টাস্ক হ্যান্ডলার।
+* **`decompiled_source/smali/com/ninmods/loader/MainActivity$$ExternalSyntheticLambdaCopy.smali`, `StatusReset.smali`, `Unload.smali`, `UnloadBtn.smali`**:
+  - টার্মিনাল লগ কপি এবং ড্রাইভার আনলোড বাটনের ইভেন্ট হ্যান্ডলার।
+* **`.github/workflows/build.yml`**:
+  - GitHub Actions ক্লাউড পাইপলাইন যা APK কম্পাইল, ৪-বাইট zipalign এবং v1+v2+v3 apksigner দিয়ে সাইন করে।
+
+### (খ) Main SRC প্রজেক্ট (`c:\Users\Sajala\Documents\mods\nin`)
+* **`app/src/main/jni/src/Includes/driver.h`** (৬৮৩ লাইন):
+  - **কানেকশন ইঞ্জিন**: এই ফাইলটি কার্নেল ড্রাইভারের ডিভাইস নোড ডিটেক্ট করে ওপেন করে।
+  - `probe_sysfs_class()`: `/sys/class/mem_tool_class/mem_tool/dev` থেকে মেজর:মাইনর নম্বর রিড করে ডিভাইস ওপেন করে।
+  - `probe_proc_devices()`: `/proc/devices`-এ `mem_tool` বা `BYNb`-এর মেজর নম্বর স্ক্যান করে।
+  - `probe_character_nodes()`: `/dev/BYNb`, `/dev/mem_tool`, `/dev/uevents_records` সরাসরি ওপেন করে।
+  - `probe_linux_process_vm()`: কোনো কার্নেল ড্রাইভার লোড না থাকলে নিরাপদ ফলব্যাক হিসেবে `process_vm_readv` চালু করে।
+  - `read_memory()` ও `write_memory()`: IOCTL কোড `0x801` (Read) ও `0x802` (Write) দিয়ে কার্নেল মেমরি ব্রিজ চালায়।
+  - `get_module_base()`: IOCTL `0x803` দিয়ে `libil2cpp.so` বা টার্গেট লাইব্রেরির বেস অ্যাড্রেস সংগ্রহ করে।
+* **`app/src/main/jni/src/Includes/gameoffsets.h`** (একক কেন্দ্রীয় অফসেট ফাইল):
+  - সমস্ত গেম অফসেট (Player, Camera, Matrix, Bone, Health) কেবল এই ১টি ফাইলে সংজ্ঞায়িত।
+* **`app/src/main/jni/src/Client.cpp`**:
+  - গেম মেমরি রিড, এনিমি কোঅর্ডিনেট ক্যালকুলেশন এবং এইমবট ট্র্যাকিং।
+* **`app/src/main/jni/src/Server.cpp`**:
+  - রুট ডেমন বা ব্যাকগ্রাউন্ড সার্ভিস যা সকেটের মাধ্যমে মেমরি বাফার ডিসপ্যাচ করে।
+* **`app/src/main/jni/src/Socket/client.cpp` & `server.cpp`**:
+  - অ্যাবস্ট্রাক্ট ইউনিক্স সকেট (`\0nin_X9K2q`) এবং লোকাল লুপব্যাক টিসিপি (`127.0.0.1:49221`) আইপিসি ইঞ্জিন।
+* **`app/src/main/java/.../EspOverlayService.kt`** (একক UI কোটলিন ফাইল):
+  - নেটিভ C++ বাফার থেকে এনিমি কোঅর্ডিনেট গ্রহণ করে স্ক্রিন ক্যানভাসে ড্র করে।
+
+---
+
+## ৩. ড্রাইভার লোডার ও SRC প্রজেক্টের ৪-স্তরের কানেকশন পাইপলাইন (4-Layer Interconnection Pipeline)
+
+```
+[Layer 1: Driver Loader (Kernel-Driver-main)]
+     │
+     ├── 1. `uname -r` দিয়ে ডিভাইসের কার্নেল (যেমন 4.19.157) ডিটেক্ট করা হয়
+     ├── 2. `Kernel_Drivers.zip` থেকে সঠিক `.ko.sh` এক্সট্র্যাক্ট করা হয়
+     └── 3. `su` রুটের মাধ্যমে `Driver.sh` ও কার্নেল মডিউল (`insmod`) এক্সিকিউট করা হয়
+     │
+     ▼
+[Layer 2: Linux Kernel (Ring 0) Driver Registration]
+     │
+     ├── 1. কার্নেলে মডিউল ইনসার্ট হয়ে Major/Minor Character Device রেজিস্টার করে
+     ├── 2. Sysfs এন্ট্রি তৈরি হয়: `/sys/class/mem_tool_class/mem_tool/dev`
+     ├── 3. Device Node তৈরি হয়: `/dev/mem_tool` অথবা `/dev/BYNb`
+     └── 4. পারমিশন নিশ্চিত করা হয়: `chmod 666 /dev/mem_tool /dev/BYNb`
+     │
+     ▼
+[Layer 3: Native Engine Connection (`nin/Includes/driver.h`)]
+     │
+     ├── 1. `c_driver::initialize()` চালানো হয়
+     ├── 2. `probe_sysfs_class()` অথবা `probe_character_nodes()` নোড ডিটেক্ট করে
+     ├── 3. `open("/dev/mem_tool", O_RDWR)` দিয়ে ফাইল ডেসক্রিপ্টর (`fd`) পায়
+     └── 4. `test_ioctl_read(fd, 0x801)` দিয়ে আসল মেমরি রিড টেস্ট করে ভেরিফাই করে
+     │
+     ▼
+[Layer 4: Memory Operations & ESP / Combat]
+     │
+     ├── 1. IOCTL 0x803 ➔ `libil2cpp.so` Base Address রিড করা হয়
+     ├── 2. IOCTL 0x801 ➔ `gameoffsets.h` পয়েন্টার ট্রাভার্স করে এনিমি লিস্ট রিড করা হয়
+     ├── 3. নেটিভ C++ ➔ WorldToScreen ও 3D Bounding Box ক্যালকুলেট করা হয়
+     └── 4. Kotlin (`EspOverlayService.kt`) ➔ ক্যানভাসে রেন্ডার করা হয়
+```
+
+---
+
+## ৪. মেমরি ও IOCTL স্ট্রাকচার স্পেসিফিকেশন (Memory & IOCTL Binary Interface)
+
+কার্নেল ড্রাইভার এবং সি++ ক্লায়েন্টের মধ্যে বাইনারি ডাটা আদান-প্রদানের জন্য নিচের ৩টি স্ট্রাকচার ব্যবহৃত হয়:
+
+### (ক) মেমরি রিড ও রাইট স্ট্রাকচার (`COPY_MEMORY`)
+* **IOCTL Read Opcode:** `0x801` (`DEV_OP_READ_MEM`)
+* **IOCTL Write Opcode:** `0x802` (`DEV_OP_WRITE_MEM`)
+* **Memory Layout (32 Bytes on AArch64, `#pragma pack(push, 8)`):**
+```c
+typedef struct _COPY_MEMORY {
+    pid_t pid;          // ৪ বাইট: টার্গেট গেমের প্রসেস আইডি (Offset 0x00)
+    uintptr_t addr;     // ৮ বাইট: গেমের মেমরি অ্যাড্রেস (Offset 0x08)
+    void* buffer;       // ৮ বাইট: যে বাফারে ডাটা পড়বে বা ডাটা রাখা আছে (Offset 0x10)
+    size_t size;        // ৮ বাইট: কত বাইট রিড বা রাইট করতে হবে (Offset 0x18)
+} COPY_MEMORY, *PCOPY_MEMORY;
+```
+
+### (খ) মডিউল বেস রিড স্ট্রাকচার (`MODULE_BASE`)
+* **IOCTL Base Opcode:** `0x803` (`DEV_OP_MODULE_BASE`)
+* **Memory Layout (24 Bytes on AArch64):**
+```c
+typedef struct _MODULE_BASE {
+    pid_t pid;          // ৪ বাইট: টার্গেট প্রসেস আইডি (Offset 0x00)
+    char* name;         // ৮ বাইট: লাইব্রেরি নেম পয়েন্টার (e.g. "libil2cpp.so") (Offset 0x08)
+    uintptr_t base;     // ৮ বাইট: কার্নেল ড্রাইভার প্রাপ্ত বেস অ্যাড্রেস এখানে রিটার্ন করবে (Offset 0x10)
+} MODULE_BASE, *PMODULE_BASE;
+```
+
+---
+
+## ৫. আইপিসি চ্যানেল আর্কিটেকচার (Dual-Channel Real-Time IPC)
+* **চ্যানেল ১ (UNIX Domain Abstract Socket):**
+  - সকেট পাথ: `\0nin_X9K2q` (প্রথম বাইট নাল `\0`, যা লিনাক্স অ্যাবস্ট্রাক্ট নেমস্পেস নির্দেশ করে)।
+  - স্ট্রাক্ট সাইজ ক্যালকুলেশন:
+    `socklen_t len = offsetof(struct sockaddr_un, sun_path) + 1 + strlen(&name[1]);`
+  - কোনো স্ট্যাক ওভারফ্লো বা স্ট্রিং ট্রাঙ্কেশন যাতে না ঘটে সেজন্য মেমকপি (`memcpy`) বাধ্যতামূলক।
+* **চ্যানেল ২ (Local TCP Loopback Socket):**
+  - অ্যাড্রেস: `127.0.0.1:49221`
+  - যদি কোনো ডিভাইসে বা ইমুলেটরে অ্যাবস্ট্রাক্ট সকেট পারমিশন ব্লক থাকে, তবে এটি স্বয়ংক্রিয় ব্যাকআপ হিসেবে কাজ করে।
+
+---
+
+## ৬. অফসেট ও নেটিভ আর্কিটেকচার নীতি (Rules 8, 9, 10)
+
+1. **একক কেন্দ্রীয় অফসেট ফাইল (`nin/.../gameoffsets.h`):**
+   - কোনো অফসেট বা গেম পয়েন্টার একাধিক ফাইলে রাখা সম্পূর্ণ নিষিদ্ধ।
+   - গেম আপডেট হলে শুধুমাত্র `gameoffsets.h` ফাইলে অফসেট আপডেট করতে হবে; সম্পূর্ণ সিস্টেম স্বয়ংক্রিয়ভাবে কার্যকর হবে।
+2. **একক UI কোটলিন ফাইল (`EspOverlayService.kt`):**
+   - কোটলিন ফাইলে কোনো অফসেট ক্যালকুলেশন, মেমরি রিডিং বা ম্যাট্রিক্স প্রজেকশন থাকবে না।
+   - সমস্ত গাণিতিক হিসাব নেটিভ C++-এ সম্পন্ন হবে। কোটলিন কেবল C++ থেকে পাওয়া বাফার স্ক্রিনে রেন্ডার করবে।
+
+---
+
+## ৭. যেকোনো এজেন্টের জন্য ধাপে ধাপে এডিটিং ব্লুপ্রিন্ট (Editing Blueprint for Future Agents)
+
+যদি ভবিষ্যতে কোনো নতুন ফিচার যুক্ত করতে হয় বা কোনো বাগ ঠিক করতে হয়, তাহলে নিচের গাইডলাইন কঠোরভাবে মেনে চলতে হবে:
+
+### ক্ষেত্র ১: ড্রাইভার লোডারে নতুন কার্নেল ড্রাইভার যোগ করতে হলে
+1. আপনার নতুন ড্রাইভার ফাইলটি `.ko.sh` ফরম্যাটে `decompiled_source/assets/Kernel_Drivers.zip`-এর নির্দিষ্ট ফোল্ডারে যোগ করুন।
+2. কোনো ফেক নাম ব্যবহার করবেন না; কার্নেলের সঠিক ভার্সন (যেমন `5.10.136.ko.sh`) অনুযায়ী নাম দিন।
+3. `Kernel_Drivers.zip`-কে সাধারণ জিপ অ্যালগরিদম দিয়ে পুনরায় প্যাক করুন।
+
+### ক্ষেত্র ২: লোডার UI বা এক্সিকিউশন পরিবর্তন করতে হলে
+1. শুধুমাত্র `decompiled_source/smali/com/ninmods/loader/MainActivity.smali` এডিট করুন।
+2. কোনো ইনলাইন বা ডামি শেল কোড (`health_storage_service_alloc`) যোগ করবেন না। আসল নোড যেমন `/dev/mem_tool` ও `/dev/BYNb` ব্যবহার করুন।
+3. `runDriver()` মেথডে কোনো অটো-ফলব্যাক বা অটো-সুইচ রাখবেন না; ব্যবহারকারীর ম্যানুয়াল সিলেক্ট করা মোডই কার্যকর রাখুন।
+
+### ক্ষেত্র ৩: গেম আপডেট বা নতুন অফসেট কনফিগারেশন করতে হলে
+1. শুধুমাত্র `nin/app/src/main/jni/src/Includes/gameoffsets.h` এডিট করুন।
+2. নতুন অফসেটগুলো কেন্দ্রীয় স্ট্রাকচারে বসিয়ে দিন।
+3. C++ কোড স্বয়ংক্রিয়ভাবে নতুন অফসেট রিড করে কাজ সম্পন্ন করবে।
+
+### ক্ষেত্র ৪: ড্রাইভারে মেমরি রিড/রাইট লজিক এডিট করতে হলে
+1. `nin/app/src/main/jni/src/Includes/driver.h`-এ IOCTL কোড ও স্ট্রাকচার চেক করুন।
+2. নিশ্চিত করুন যে `COPY_MEMORY` স্ট্রাকচারের মেমরি অ্যালাইনমেন্ট কার্নেলের সাথে ম্যাচ করছে।
+3. `c_driver::read()` এবং `c_driver::write()` মেথডে এরর হ্যান্ডলিং বজায় রাখুন।
+
+---
+
+## ৮. অলঙ্ঘনীয় নিয়ামাবলী ও চেক-লিস্ট (Non-Negotiable Rules & Verification Checklist)
+
+যেকোনো কাজ শেষ করার আগে নিচের প্রশ্নগুলোর উত্তর "হ্যাঁ" হতে হবে:
+
+* [x] **রুল ১:** কোনো ফেক বা ডামি কোড, মক স্ট্যাটাস বা কৃত্রিম অফসেট কি রাখা হয়েছে? (উত্তর: **না**)
+* [x] **রুল ৭:** কোনো ব্র্যান্ডের নাম বা স্ট্যাটিক আইডি কি হার্ডকোড করা হয়েছে? (উত্তর: **না, 100% Dynamic**)
+* [x] **রুল ৯:** সমস্ত গেম অফসেট কি একক কেন্দ্রীয় ফাইলে (`gameoffsets.h`) সীমাবদ্ধ রয়েছে? (উত্তর: **হ্যাঁ**)
+* [x] **রুল ১০:** ESP-এর জন্য কি কোটলিনে মাত্র ১টি UI ফাইল (`EspOverlayService.kt`) রয়েছে এবং সমস্ত মেমরি অপারেশন কি C++-এ হচ্ছে? (উত্তর: **হ্যাঁ**)
+* [x] **রুল ১১:** ভার্সনিং কি স্থায়ী ৯০ প্রটোকল (`V90.1`, `V90.2`, `V90.3`...) মেনে চলছে এবং কোনো `.idsig` ফাইল কি ক্লিন রাখা হয়েছে? (উত্তর: **হ্যাঁ**)
+* [x] **রুল ১২:** লোকাল মেশিনে কি হেভি বিল্ড বন্ধ রেখে 100% GitHub Actions ক্লাউড পাইপলাইন ব্যবহৃত হচ্ছে? (উত্তর: **হ্যাঁ**)
+* [x] **রুল ১৪:** ইউজারের মুখে স্পষ্ট "পুশ করো" নির্দেশ ছাড়া কি কোনো `git push` বা ক্লাউড বিল্ড চালানো থেকে সম্পূর্ণ বিরত থাকা হয়েছে? (উত্তর: **হ্যাঁ, ১০০% লোকাল রাখা হয়েছে**)
+* [x] **রুল ১৫:** সমস্ত ফাইল অপারেশন কি শুধুমাত্র অনুমোদিত রুট ডিরেক্টরি `c:\Users\Sajala\Documents\mods`-এর ভেতরে সীমাবদ্ধ রয়েছে? (উত্তর: **হ্যাঁ**)
+
+==============================================================================
+# END OF ARCHITECTURE PLAN
+==============================================================================
