@@ -1574,6 +1574,10 @@
 
     invoke-virtual {v2, v3}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 
+    const-string v3, "setenforce 0 2>/dev/null; for s in /sys/class/mem_tool_class/*/dev; do if [ -e \"$s\" ]; then dname=$(echo \"$s\" | awk -F'/' '{print $(NF-1)}'); mm=$(cat \"$s\" 2>/dev/null); maj=$(echo \"$mm\" | cut -d: -f1); min=$(echo \"$mm\" | cut -d: -f2); if [ -n \"$maj\" ] && [ -n \"$min\" ]; then mknod /dev/$dname c $maj $min 2>/dev/null; chmod 666 /dev/$dname 2>/dev/null; ln -sf /dev/$dname /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; done; chmod 666 /dev/BYNb* /dev/mem_tool* /proc/uevents_records 2>/dev/null\n"
+
+    invoke-virtual {v2, v3}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
+
     .line 543
     const-string v3, "echo \"EXIT_CODE=$?\"\n"
 
@@ -1802,7 +1806,7 @@
     const-string v1, "su"
 
     :try_start_0
-    const-string v2, "NODES=''; for n in /dev/BYNb /dev/mem_tool /proc/uevents_records; do if [ -e \"$n\" ]; then NODES=\"$NODES $n\"; fi; done; for s in /sys/class/mem_tool_class/*/dev; do if [ -e \"$s\" ]; then NODES=\"$NODES $s\"; fi; done; MODS=$(cat /proc/modules 2>/dev/null | grep -E \"BYNb|mem_tool|uevents|driver|nh|5.10\"); if [ -n \"$NODES\" ] || [ -n \"$MODS\" ]; then echo \"[+] ACTIVE DRIVER DETECTED\"; if [ -n \"$NODES\" ]; then echo \"[+] Device Endpoints:\"; ls -l $NODES; fi; if [ -n \"$MODS\" ]; then echo \"[+] Active Kernel Modules:\"; echo \"$MODS\" | head -n 5; fi; echo \"RESULT=DRIVER_ACTIVE\"; else echo \"[-] NO ACTIVE DRIVER FOUND\"; echo \"[-] Checked: /dev/BYNb, /dev/mem_tool, /proc/uevents_records\"; echo \"[-] Kernel Error Telemetry (dmesg):\"; dmesg 2>/dev/null | grep -iE \"module_sig|PKCS|disagree|vermagic|failed\" | tail -n 5; echo \"RESULT=DRIVER_INACTIVE\"; fi"
+    const-string v2, "setenforce 0 2>/dev/null; for s in /sys/class/mem_tool_class/*/dev; do if [ -e \"$s\" ]; then dname=$(echo \"$s\" | awk -F'/' '{print $(NF-1)}'); mm=$(cat \"$s\" 2>/dev/null); maj=$(echo \"$mm\" | cut -d: -f1); min=$(echo \"$mm\" | cut -d: -f2); if [ -n \"$maj\" ] && [ -n \"$min\" ]; then mknod /dev/$dname c $maj $min 2>/dev/null; chmod 666 /dev/$dname 2>/dev/null; ln -sf /dev/$dname /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; done; chmod 666 /dev/BYNb* /dev/mem_tool* /proc/uevents_records 2>/dev/null; NODES=''; for n in /dev/BYNb /dev/mem_tool /proc/uevents_records; do if [ -e \"$n\" ]; then NODES=\"$NODES $n\"; fi; done; for s in /sys/class/mem_tool_class/*/dev; do if [ -e \"$s\" ]; then NODES=\"$NODES $s\"; fi; done; MODS=$(cat /proc/modules 2>/dev/null | grep -E \"BYNb|mem_tool|uevents|driver|nh|5.10\"); if [ -n \"$NODES\" ] || [ -n \"$MODS\" ]; then echo \"[+] ACTIVE DRIVER DETECTED\"; if [ -n \"$NODES\" ]; then echo \"[+] Device Endpoints:\"; ls -l $NODES; fi; if [ -n \"$MODS\" ]; then echo \"[+] Active Kernel Modules:\"; echo \"$MODS\" | head -n 5; fi; echo \"RESULT=DRIVER_ACTIVE\"; else echo \"[-] NO ACTIVE DRIVER FOUND\"; echo \"[-] Checked: /dev/BYNb, /dev/mem_tool, /proc/uevents_records\"; echo \"[-] Kernel Error Telemetry (dmesg):\"; dmesg 2>/dev/null | grep -iE \"module_sig|PKCS|disagree|vermagic|failed\" | tail -n 5; echo \"RESULT=DRIVER_INACTIVE\"; fi"
 
     invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
 
@@ -2682,8 +2686,7 @@
 
     invoke-virtual {v1, v0}, Landroid/content/ClipboardManager;->setPrimaryClip(Landroid/content/ClipData;)V
 
-    invoke-interface {v0}, Ljava/lang/CharSequence;->toString()Ljava/lang/String;
-    move-result-object v2
+    const-string v2, "[+] Terminal logs copied by user"
     invoke-static {v2}, Lcom/ninmods/loader/MainActivity;->writeLogLine(Ljava/lang/String;)V
     const-string v0, "Terminal logs copied and saved to /sdcard/Download/ninmods_driver_loader.log"
 
