@@ -14,6 +14,8 @@
 
 .field private btnRT:Landroid/widget/Button;
 
+.field private btnStop:Landroid/widget/Button;
+
 .field private executorService:Ljava/util/concurrent/ExecutorService;
 
 .field private isDriverChecked:Z
@@ -1390,36 +1392,8 @@
 
     .line 568
     :cond_0
-    const-string v0, "QX"
-
-    invoke-virtual {p2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v0
-
-    if-nez v0, :cond_1
-
-    const-string v0, "RT"
-
-    invoke-virtual {p2, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v0
-
-    if-eqz v0, :cond_3
-
-    .line 569
-    :cond_1
-    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    const-string v1, "Driver Status: Active"
-
-    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
-
-    .line 570
-    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->tvDriverStatus:Landroid/widget/TextView;
-
-    const v1, -0xff198a
-
-    invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextColor(I)V
+    # Run genuine kernel verification right after driver execution
+    invoke-direct {p0}, Lcom/ninmods/loader/MainActivity;->executeDriverCheck()V
 
     goto :goto_0
 
@@ -1824,93 +1798,8 @@
     const-string v1, "su"
 
     :try_start_0
-    new-instance v2, Ljava/lang/StringBuilder;
+    const-string v2, "NODES=''; for n in /dev/BYNb /dev/mem_tool /proc/uevents_records /proc/sched_debug; do if [ -e \"$n\" ]; then NODES=\"$NODES $n\"; fi; done; if [ -n \"$NODES\" ]; then echo \"[+] ACTIVE DRIVER DETECTED\"; echo \"[+] Device Nodes:\"; ls -l $NODES; echo \"[+] Kernel Modules in /proc/modules:\"; cat /proc/modules 2>/dev/null | grep -E \"BYNb|mem_tool|uevents|driver|nh\" | head -n 5; echo \"RESULT=DRIVER_ACTIVE\"; else echo \"[-] NO ACTIVE DRIVER FOUND\"; echo \"[-] Checked: /dev/BYNb, /dev/mem_tool, /proc/uevents_records\"; echo \"[-] Kernel Error Telemetry (dmesg):\"; dmesg 2>/dev/null | grep -iE \"module_sig|PKCS|disagree|vermagic|failed\" | tail -n 5; echo \"RESULT=DRIVER_INACTIVE\"; fi"
 
-    invoke-direct {v2}, Ljava/lang/StringBuilder;-><init>()V
-
-    invoke-virtual {p0}, Lcom/ninmods/loader/MainActivity;->getFilesDir()Ljava/io/File;
-
-    move-result-object v3
-
-    invoke-virtual {v3}, Ljava/io/File;->getAbsolutePath()Ljava/lang/String;
-
-    move-result-object v3
-
-    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v2
-
-    const-string v3, "/Driver.sh"
-
-    invoke-virtual {v2, v3}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v2
-
-    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v2
-
-    .line 390
-    .local v2, "driverPath":Ljava/lang/String;
-    new-instance v3, Ljava/io/File;
-
-    invoke-direct {v3, v2}, Ljava/io/File;-><init>(Ljava/lang/String;)V
-
-    .line 392
-    .local v3, "driverFile":Ljava/io/File;
-    invoke-virtual {v3}, Ljava/io/File;->exists()Z
-
-    move-result v4
-
-    if-nez v4, :cond_0
-
-    .line 393
-    new-instance v0, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda0;
-
-    invoke-direct {v0, p0}, Lcom/ninmods/loader/MainActivity$$ExternalSyntheticLambda0;-><init>(Lcom/ninmods/loader/MainActivity;)V
-
-    invoke-virtual {p0, v0}, Lcom/ninmods/loader/MainActivity;->runOnUiThread(Ljava/lang/Runnable;)V
-
-    .line 400
-    return-void
-
-    .line 403
-    :cond_0
-    invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
-
-    move-result-object v4
-
-    new-instance v5, Ljava/lang/StringBuilder;
-
-    invoke-direct {v5}, Ljava/lang/StringBuilder;-><init>()V
-
-    const-string v6, "chmod 777 "
-
-    invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v5
-
-    invoke-virtual {v5, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-
-    move-result-object v5
-
-    invoke-virtual {v5}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-
-    move-result-object v5
-
-    filled-new-array {v1, v0, v5}, [Ljava/lang/String;
-
-    move-result-object v5
-
-    invoke-virtual {v4, v5}, Ljava/lang/Runtime;->exec([Ljava/lang/String;)Ljava/lang/Process;
-
-    move-result-object v4
-
-    .line 406
-    .local v4, "chmodProcess":Ljava/lang/Process;
-    invoke-virtual {v4}, Ljava/lang/Process;->waitFor()I
-
-    .line 408
     invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
 
     move-result-object v5
@@ -2046,40 +1935,13 @@
 
     .line 437
     .local v7, "result":Ljava/lang/String;
-    const-string v9, "fail"
+    const-string v9, "driver_active"
 
     invoke-virtual {v7, v9}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
 
     move-result v9
 
-    if-nez v9, :cond_3
-
-    const-string v9, "error"
-
-    .line 438
-    invoke-virtual {v7, v9}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v9
-
-    if-nez v9, :cond_3
-
-    const-string v9, "not found"
-
-    .line 439
-    invoke-virtual {v7, v9}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v9
-
-    if-nez v9, :cond_3
-
-    const-string v9, "no such"
-
-    .line 440
-    invoke-virtual {v7, v9}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
-
-    move-result v9
-
-    if-nez v9, :cond_3
+    if-eqz v9, :cond_3
 
     const/4 v9, 0x1
 
@@ -2246,6 +2108,20 @@
 
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextColor(I)V
 
+    # Enable Stop button
+    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->btnStop:Landroid/widget/Button;
+
+    if-eqz v0, :cond_stop_en
+
+    const/4 v1, 0x1
+
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setEnabled(Z)V
+
+    const/high16 v1, 0x3f800000    # 1.0f
+
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setAlpha(F)V
+
+    :cond_stop_en
     goto :goto_0
 
     .line 451
@@ -2263,6 +2139,20 @@
 
     invoke-virtual {v0, v1}, Landroid/widget/TextView;->setTextColor(I)V
 
+    # Disable Stop button
+    iget-object v0, p0, Lcom/ninmods/loader/MainActivity;->btnStop:Landroid/widget/Button;
+
+    if-eqz v0, :cond_stop_dis
+
+    const/4 v1, 0x0
+
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setEnabled(Z)V
+
+    const v1, 0x3ecccccd    # 0.4f
+
+    invoke-virtual {v0, v1}, Landroid/widget/Button;->setAlpha(F)V
+
+    :cond_stop_dis
     .line 454
     :goto_0
     return-void
@@ -3215,6 +3105,11 @@
 
     new-instance v9, Landroid/widget/Button;
     invoke-direct {v9, p0}, Landroid/widget/Button;-><init>(Landroid/content/Context;)V
+    iput-object v9, p0, Lcom/ninmods/loader/MainActivity;->btnStop:Landroid/widget/Button;
+    const/4 v10, 0x0
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setEnabled(Z)V
+    const v10, 0x3ecccccd    # 0.4f
+    invoke-virtual {v9, v10}, Landroid/widget/Button;->setAlpha(F)V
     const-string v10, "STOP / UNLOAD ACTIVE ENGINE"
     invoke-virtual {v9, v10}, Landroid/widget/Button;->setText(Ljava/lang/CharSequence;)V
     const v10, -0xadad    # 0xFFFF5252
