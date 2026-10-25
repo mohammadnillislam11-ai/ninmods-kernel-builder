@@ -3252,7 +3252,7 @@
 .method private showModifiedPopup()V
     .locals 2
 
-    const-string v0, "NINMODS Driver Loader Ready"
+    const-string v0, "NINMODS Driver Loader"
 
     const/4 v1, 0x0
 
