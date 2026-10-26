@@ -1,4 +1,4 @@
-﻿.class public final Lcom/ghost/driver/loader/databinding/ActivityMainBinding;
+.class public final Lcom/ghost/driver/loader/databinding/ActivityMainBinding;
 .super Ljava/lang/Object;
 .source "ActivityMainBinding.java"
 
