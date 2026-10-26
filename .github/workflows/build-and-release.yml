@@ -49,6 +49,11 @@ jobs:
       - name: Sign APK (v1+v2+v3, no .idsig)
         run: |
           mkdir -p release_apk
+          # Extract dynamic version from apktool.yml
+          LOADER_VER=$(grep 'versionName:' decompiled_source/apktool.yml | sed -E "s/.*versionName: '([^']+)'.*/\1/" | tr -d ' \r\n')
+          if [ -z "$LOADER_VER" ]; then LOADER_VER="90.58"; fi
+          echo "Loader Version: $LOADER_VER"
+
           UBER_SIGNER_URL="https://github.com/patrickfav/uber-apk-signer/releases/download/v1.3.0/uber-apk-signer-1.3.0.jar"
           if curl -sL --fail "$UBER_SIGNER_URL" -o uber-apk-signer.jar; then
             echo "Signing with uber-apk-signer (v1+v2+v3, no v4)..."
@@ -59,11 +64,9 @@ jobs:
             OUTPUT_APK=$(find release_apk -type f -name "*.apk" | grep -v idsig | head -n 1)
             # Remove any .idsig files (prohibited by GEMINI.md)
             find release_apk -name "*.idsig" -delete
-            # Publish as V90.58 (current) and legacy names for compatibility
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.58.apk"
-            cp "$OUTPUT_APK" "release_apk/NINMODS_Driver_Loader.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V45.apk"
-            # Remove intermediate signed file (keep only named versions)
+            # Keep ONLY the single official versioned loader APK
+            mv "$OUTPUT_APK" "release_apk/Loader_V${LOADER_VER}.apk"
+            # Clean all intermediate debug/signing files
             rm -f release_apk/*aligned-debugSigned.apk release_apk/*.idsig 2>/dev/null || true
           else
             echo "Signing with debug keystore (fallback)..."
@@ -71,40 +74,42 @@ jobs:
               -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
             jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore debug.keystore \
               -storepass android build/ninmods_loader_aligned.apk androiddebugkey
-            cp build/ninmods_loader_aligned.apk "release_apk/Loader_V90.58.apk"
-            cp build/ninmods_loader_aligned.apk "release_apk/NINMODS_Driver_Loader.apk"
-            cp build/ninmods_loader_aligned.apk "release_apk/Loader_V45.apk"
+            mv build/ninmods_loader_aligned.apk "release_apk/Loader_V${LOADER_VER}.apk"
           fi
           echo "=== Release APKs ==="
           ls -lh release_apk/
 
-      - name: Fetch Latest Main App APK
+      - name: Fetch Latest Main App APK (Preserve Original Version)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Fetch Main App from releases without renaming it (preserves its original build version)
           gh release download --repo mohammadnillislam11-ai/ninmods --pattern "Main_V*.apk" --dir release_apk/ 2>/dev/null || echo "Main App download fallback"
           ls -la release_apk/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Loader-V90.57-APK
+          name: Loader-APK
           path: release_apk/*.apk
 
       - name: Create GitHub Release and Upload Artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          LOADER_VER=$(grep 'versionName:' decompiled_source/apktool.yml | sed -E "s/.*versionName: '([^']+)'.*/\1/" | tr -d ' \r\n')
+          if [ -z "$LOADER_VER" ]; then LOADER_VER="90.58"; fi
+
           echo "Cleaning up all older releases..."
           for old_tag in $(gh release list --limit 50 --json tagName -q '.[].tagName'); do
             echo "Deleting old release: $old_tag"
             gh release delete "$old_tag" --yes --cleanup-tag || true
           done
 
-          RELEASE_TAG="V90.57-$(date +'%Y%m%d%H%M%S')"
+          RELEASE_TAG="V${LOADER_VER}-$(date +'%Y%m%d%H%M%S')"
           ASSETS=$(find release_apk -type f -name "*.apk")
-          NOTES="Loader V90.57: Fixed kernel module loading (sh to insmod). Copies .ko to /data/local/tmp/ for SELinux safety."
+          NOTES="Loader V${LOADER_VER}: Official Kernel Driver Loader"
           gh release create "$RELEASE_TAG" \
             $ASSETS \
-            --title "Loader V90.57" \
+            --title "Loader V${LOADER_VER}" \
             --notes "$NOTES" || echo "Release creation skipped"
