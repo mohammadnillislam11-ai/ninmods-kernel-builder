@@ -42,70 +42,41 @@ jobs:
           mkdir -p build
           java -jar /usr/local/bin/apktool.jar b --use-aapt2 decompiled_source -o build/ninmods_loader_unsigned.apk
 
-      - name: Sign APK with Uber-apk-signer / Debug Keystore
+      - name: Zipalign APK (4-byte page align)
+        run: |
+          zipalign -p -f 4 build/ninmods_loader_unsigned.apk build/ninmods_loader_aligned.apk
+
+      - name: Sign APK (v1+v2+v3, no .idsig)
         run: |
           mkdir -p release_apk
           UBER_SIGNER_URL="https://github.com/patrickfav/uber-apk-signer/releases/download/v1.3.0/uber-apk-signer-1.3.0.jar"
           if curl -sL --fail "$UBER_SIGNER_URL" -o uber-apk-signer.jar; then
-            echo "Signing with uber-apk-signer..."
-            java -jar uber-apk-signer.jar -a build/ninmods_loader_unsigned.apk -o release_apk/
-            OUTPUT_APK=$(find release_apk -type f -name "*.apk" | head -n 1)
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.52.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.51.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.44.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.43.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.42.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.41.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.40.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.39.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.38.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.25.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.24.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.23.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.22.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.21.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.20.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.19.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.18.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.17.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.16.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.15.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.14.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.13.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.12.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.11.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.10.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.9.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.8.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.7.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.6.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.5.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.2.apk"
-            cp "$OUTPUT_APK" "release_apk/Loader_V45.apk"
+            echo "Signing with uber-apk-signer (v1+v2+v3, no v4)..."
+            java -jar uber-apk-signer.jar \
+              --allowResign \
+              -a build/ninmods_loader_aligned.apk \
+              -o release_apk/
+            OUTPUT_APK=$(find release_apk -type f -name "*.apk" | grep -v idsig | head -n 1)
+            # Remove any .idsig files (prohibited by GEMINI.md)
+            find release_apk -name "*.idsig" -delete
+            # Publish as V90.57 (current) and legacy names for compatibility
+            cp "$OUTPUT_APK" "release_apk/Loader_V90.57.apk"
             cp "$OUTPUT_APK" "release_apk/NINMODS_Driver_Loader.apk"
+            cp "$OUTPUT_APK" "release_apk/Loader_V45.apk"
+            # Remove intermediate signed file (keep only named versions)
             rm -f release_apk/*aligned-debugSigned.apk release_apk/*.idsig 2>/dev/null || true
           else
-            echo "Signing with debug keystore..."
+            echo "Signing with debug keystore (fallback)..."
             keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey \
               -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
             jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore debug.keystore \
-              -storepass android build/ninmods_loader_unsigned.apk androiddebugkey
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.52.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.51.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.16.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.15.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.14.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.13.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.12.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.11.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.10.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.9.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.6.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.5.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V90.2.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/Loader_V45.apk"
-            cp build/ninmods_loader_unsigned.apk "release_apk/NINMODS_Driver_Loader.apk"
+              -storepass android build/ninmods_loader_aligned.apk androiddebugkey
+            cp build/ninmods_loader_aligned.apk "release_apk/Loader_V90.57.apk"
+            cp build/ninmods_loader_aligned.apk "release_apk/NINMODS_Driver_Loader.apk"
+            cp build/ninmods_loader_aligned.apk "release_apk/Loader_V45.apk"
           fi
+          echo "=== Release APKs ==="
+          ls -lh release_apk/
 
       - name: Fetch Latest Main App APK
         env:
@@ -117,7 +88,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Loader-V45-APK
+          name: Loader-V90.57-APK
           path: release_apk/*.apk
 
       - name: Create GitHub Release and Upload Artifacts
@@ -130,9 +101,18 @@ jobs:
             gh release delete "$old_tag" --yes --cleanup-tag || true
           done
 
-          RELEASE_TAG="v45.0-$(date +'%Y%m%d%H%M%S')"
+          RELEASE_TAG="V90.57-$(date +'%Y%m%d%H%M%S')"
           ASSETS=$(find release_apk -type f -name "*.apk")
           gh release create "$RELEASE_TAG" \
             $ASSETS \
-            --title "Release $RELEASE_TAG" \
-            --notes "Release bundle $RELEASE_TAG" || echo "Release creation skipped"
+            --title "Loader V90.57 — Critical insmod fix" \
+            --notes "## Loader V90.57 — Critical Kernel Module Loading Fix
+
+**Fix:** Kernel modules (.ko files) were incorrectly executed via \`sh\` (which fails on ELF binaries). Now correctly:
+1. Copies .ko to SELinux-safe \`/data/local/tmp/_nin_drv.ko\`
+2. Sets permissions \`chmod 644\`
+3. Loads via \`insmod /data/local/tmp/_nin_drv.ko\`
+
+**Impact:** Driver loading should now succeed when vermagic matches — resolving the issue where all other loaders worked but ours failed.
+
+Download: https://github.com/mohammadnillislam11-ai/ninmods/releases/latest" || echo "Release creation skipped"
