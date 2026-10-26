@@ -103,16 +103,8 @@ jobs:
 
           RELEASE_TAG="V90.57-$(date +'%Y%m%d%H%M%S')"
           ASSETS=$(find release_apk -type f -name "*.apk")
+          NOTES="Loader V90.57: Fixed kernel module loading (sh to insmod). Copies .ko to /data/local/tmp/ for SELinux safety."
           gh release create "$RELEASE_TAG" \
             $ASSETS \
-            --title "Loader V90.57 — Critical insmod fix" \
-            --notes "## Loader V90.57 — Critical Kernel Module Loading Fix
-
-**Fix:** Kernel modules (.ko files) were incorrectly executed via \`sh\` (which fails on ELF binaries). Now correctly:
-1. Copies .ko to SELinux-safe \`/data/local/tmp/_nin_drv.ko\`
-2. Sets permissions \`chmod 644\`
-3. Loads via \`insmod /data/local/tmp/_nin_drv.ko\`
-
-**Impact:** Driver loading should now succeed when vermagic matches — resolving the issue where all other loaders worked but ours failed.
-
-Download: https://github.com/mohammadnillislam11-ai/ninmods/releases/latest" || echo "Release creation skipped"
+            --title "Loader V90.57" \
+            --notes "$NOTES" || echo "Release creation skipped"
