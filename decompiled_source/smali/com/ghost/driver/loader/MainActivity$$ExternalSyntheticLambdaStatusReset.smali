@@ -1,4 +1,4 @@
-﻿.class public final synthetic Lcom/ghost/driver/loader/MainActivity$$ExternalSyntheticLambdaStatusReset;
+.class public final synthetic Lcom/ghost/driver/loader/MainActivity$$ExternalSyntheticLambdaStatusReset;
 .super Ljava/lang/Object;
 .source "D8$$SyntheticClass"
 

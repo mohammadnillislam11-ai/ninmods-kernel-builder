@@ -59,8 +59,8 @@ jobs:
             OUTPUT_APK=$(find release_apk -type f -name "*.apk" | grep -v idsig | head -n 1)
             # Remove any .idsig files (prohibited by GEMINI.md)
             find release_apk -name "*.idsig" -delete
-            # Publish as V90.57 (current) and legacy names for compatibility
-            cp "$OUTPUT_APK" "release_apk/Loader_V90.57.apk"
+            # Publish as V90.58 (current) and legacy names for compatibility
+            cp "$OUTPUT_APK" "release_apk/Loader_V90.58.apk"
             cp "$OUTPUT_APK" "release_apk/NINMODS_Driver_Loader.apk"
             cp "$OUTPUT_APK" "release_apk/Loader_V45.apk"
             # Remove intermediate signed file (keep only named versions)
@@ -71,7 +71,7 @@ jobs:
               -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
             jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore debug.keystore \
               -storepass android build/ninmods_loader_aligned.apk androiddebugkey
-            cp build/ninmods_loader_aligned.apk "release_apk/Loader_V90.57.apk"
+            cp build/ninmods_loader_aligned.apk "release_apk/Loader_V90.58.apk"
             cp build/ninmods_loader_aligned.apk "release_apk/NINMODS_Driver_Loader.apk"
             cp build/ninmods_loader_aligned.apk "release_apk/Loader_V45.apk"
           fi

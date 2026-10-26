@@ -1,4 +1,4 @@
-﻿.class public final synthetic Lcom/ghost/driver/loader/MainActivity$$ExternalSyntheticLambda13;
+.class public final synthetic Lcom/ghost/driver/loader/MainActivity$$ExternalSyntheticLambda13;
 .super Ljava/lang/Object;
 .source "D8$$SyntheticClass"
 

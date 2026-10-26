@@ -1,4 +1,4 @@
-﻿.class public final Lcom/ghost/driver/loader/R$string;
+.class public final Lcom/ghost/driver/loader/R$string;
 .super Ljava/lang/Object;
 
 

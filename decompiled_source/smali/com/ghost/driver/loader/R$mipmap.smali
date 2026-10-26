@@ -1,4 +1,4 @@
-﻿.class public final Lcom/ghost/driver/loader/R$mipmap;
+.class public final Lcom/ghost/driver/loader/R$mipmap;
 .super Ljava/lang/Object;
 
 

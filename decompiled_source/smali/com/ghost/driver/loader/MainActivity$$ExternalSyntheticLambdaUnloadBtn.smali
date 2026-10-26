@@ -1,4 +1,4 @@
-﻿.class public final synthetic Lcom/ghost/driver/loader/MainActivity$$ExternalSyntheticLambdaUnloadBtn;
+.class public final synthetic Lcom/ghost/driver/loader/MainActivity$$ExternalSyntheticLambdaUnloadBtn;
 .super Ljava/lang/Object;
 .source "D8$$SyntheticClass"
 
