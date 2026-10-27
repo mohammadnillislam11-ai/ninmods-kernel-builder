@@ -1493,7 +1493,7 @@
 .end method
 
 .method private synthetic lambda$executeDriver$15(Ljava/lang/String;Ljava/lang/String;)V
-    .locals 16
+    .locals 13
     .param p1, "path"    # Ljava/lang/String;
     .param p2, "type"    # Ljava/lang/String;
 
@@ -1721,13 +1721,13 @@
     move-result-object v8
     const-string v8, "[NIN] TIMEOUT_FAILED: su did not finish within 30s, process destroyed\n"
     invoke-virtual {v4, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-    const/4 v13, 0x1
+    const/4 v9, 0x1
     goto :wait_done
     :wait_ok
-    const/4 v13, 0x0
+    const/4 v9, 0x0
     :wait_done
-    const-wide/16 v14, 0x7d0
-    invoke-virtual {v12, v14, v15}, Ljava/lang/Thread;->join(J)V
+    const-wide/16 v7, 0x7d0
+    invoke-virtual {v12, v7, v8}, Ljava/lang/Thread;->join(J)V
 
     .line 555
     invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
@@ -1789,7 +1789,7 @@
     .line 561
     .local v5, "success":Z
     :goto_1
-    if-eqz v13, :tflag_done
+    if-eqz v9, :tflag_done
     const/4 v5, 0x0
     :tflag_done
     move-object v7, v0
@@ -1799,18 +1799,18 @@
     invoke-virtual {v11}, Lcom/ghost/driver/loader/StderrDrain;->getText()Ljava/lang/String;
     move-result-object v8
     invoke-virtual {v8}, Ljava/lang/String;->isEmpty()Z
-    move-result v14
-    if-eqz v14, :no_stderr
+    move-result v10
+    if-eqz v10, :no_stderr
     new-instance v8, Ljava/lang/StringBuilder;
     invoke-direct {v8}, Ljava/lang/StringBuilder;-><init>()V
     invoke-virtual {v8, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
     move-result-object v8
-    const-string v14, "[NIN] STDERR:\n"
-    invoke-virtual {v8, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const-string v10, "[NIN] STDERR:\n"
+    invoke-virtual {v8, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
     move-result-object v8
     invoke-virtual {v11}, Lcom/ghost/driver/loader/StderrDrain;->getText()Ljava/lang/String;
-    move-result-object v14
-    invoke-virtual {v8, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v10
+    invoke-virtual {v8, v10}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
     move-result-object v8
     invoke-virtual {v8}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
     move-result-object v7
@@ -1917,7 +1917,7 @@
 .end method
 
 .method private synthetic lambda$executeDriverCheck$11()V
-    .locals 16
+    .locals 15
 
     .line 389
     const-string v0, "-c"
