@@ -147,6 +147,42 @@ what was removed.
 
 ---
 
+## 2a. Register allocation repair (found by the CI build, commit `d761d16`)
+
+The first CI build of the hardened loader **failed to assemble** with:
+
+```
+decompiled_source/smali/com/ghost/driver/loader/MainActivity.smali[1506,4] Invalid register: v17.
+  Must be between v0 and v15, inclusive.
+```
+
+**Cause.** Dalvik encodes a register reference in a 4 bit field, so a method frame holds at
+most 16 registers in total. With `.locals N` the parameters occupy `v(N) … v(N+M-1)`, so a
+method may only *reference* a parameter `p_k` when `N + k ≤ 15`. The hardening rewrite had
+raised `.locals` to 16 in two methods that also have parameters, which pushed the parameters
+to `v16/v17/v18`.
+
+| Method | Parameters | Before | After |
+|---|---|---|---|
+| `lambda$executeDriver$15` | `this` + 2 = 3 | `.locals 16` | `.locals 13` |
+| `lambda$executeDriverCheck$11` | `this` = 1 | `.locals 16` | `.locals 15` |
+
+The three registers that no longer existed (`v13`, `v14`, `v15`) were remapped onto registers
+that were provably dead at the point of use:
+
+* `v13` → `v9` — the timeout flag (live from the `waitFor` block until the success check);
+  `v9` was only used by the `waitFor` argument list and was dead from that point on.
+* `v14` → `v10` — the stderr banner (used after the `join()`); `v10` was only used by the
+  `waitFor` argument list.
+* the `join(2000)` long pair `(v14, v15)` → `(v7, v8)` — both were dead at that point, and
+  the pair is still two consecutive registers as `const-wide/16` requires.
+
+A pre-flight checker was added so the same class of error is caught before a build:
+`_validate_registers.py` walks every `.smali` file in the project and reports any method that
+references a parameter above `v15` or a local outside its `.locals` range.
+
+---
+
 ## 3. NOT VERIFIED — must be confirmed by a build + on-device test
 
 There is **no Android SDK/NDK in this environment** and project rule 11 forbids local builds, so
