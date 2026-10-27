@@ -14,7 +14,7 @@
         <package android:name="com.dts.freefireth"/>
         <package android:name="com.dts.freefiremax"/>
     </queries>
-    <application android:allowBackup="true" android:debuggable="true" android:extractNativeLibs="true" android:icon="@drawable/nin_logo" android:label="@string/app_name" android:requestLegacyExternalStorage="true" android:roundIcon="@drawable/nin_logo" android:supportsRtl="true" android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+    <application android:allowBackup="true" android:extractNativeLibs="true" android:icon="@drawable/nin_logo" android:label="@string/app_name" android:requestLegacyExternalStorage="true" android:roundIcon="@drawable/nin_logo" android:supportsRtl="true" android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
         <activity android:exported="true" android:name="com.ghost.driver.loader.MainActivity" android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

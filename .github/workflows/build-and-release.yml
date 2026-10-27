@@ -46,35 +46,87 @@ jobs:
         run: |
           zipalign -p -f 4 build/ninmods_loader_unsigned.apk build/ninmods_loader_aligned.apk
 
-      - name: Sign APK (v1+v2+v3, no .idsig)
+      - name: Decode Release Keystore (required, no debug fallback)
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
         run: |
+          set -euo pipefail
+          if [ -z "${RELEASE_KEYSTORE_BASE64:-}" ]; then
+            echo "::error::Secret RELEASE_KEYSTORE_BASE64 is not configured. Refusing to publish a debug-signed release."
+            exit 1
+          fi
+          mkdir -p signing
+          printf '%s' "$RELEASE_KEYSTORE_BASE64" | base64 --decode > signing/release.keystore
+          if [ ! -s signing/release.keystore ]; then
+            echo "::error::Decoded keystore is empty - check RELEASE_KEYSTORE_BASE64."
+            exit 1
+          fi
+          chmod 600 signing/release.keystore
+          echo "Release keystore decoded OK ($(wc -c < signing/release.keystore) bytes)."
+
+      - name: Sign APK (apksigner v1+v2+v3, v4 disabled, .idsig removed)
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          # Fail closed: never fall back to a debug / throwaway key.
+          for var in RELEASE_KEYSTORE_PASSWORD RELEASE_KEY_ALIAS; do
+            if [ -z "${!var:-}" ]; then
+              echo "::error::Required secret $var is not configured. Aborting (no debug-key fallback)."
+              exit 1
+            fi
+          done
+          if [ -z "${RELEASE_KEY_PASSWORD:-}" ]; then
+            export RELEASE_KEY_PASSWORD="$RELEASE_KEYSTORE_PASSWORD"
+          fi
+          if [ ! -f signing/release.keystore ]; then
+            echo "::error::signing/release.keystore missing - keystore decode step failed."
+            exit 1
+          fi
+
           mkdir -p release_apk
           # Extract dynamic version from apktool.yml
           LOADER_VER=$(grep 'versionName:' decompiled_source/apktool.yml | sed -E "s/.*versionName: '([^']+)'.*/\1/" | tr -d ' \r\n')
           if [ -z "$LOADER_VER" ]; then LOADER_VER="90.58"; fi
           echo "Loader Version: $LOADER_VER"
 
-          UBER_SIGNER_URL="https://github.com/patrickfav/uber-apk-signer/releases/download/v1.3.0/uber-apk-signer-1.3.0.jar"
-          if curl -sL --fail "$UBER_SIGNER_URL" -o uber-apk-signer.jar; then
-            echo "Signing with uber-apk-signer (v1+v2+v3, no v4)..."
-            java -jar uber-apk-signer.jar \
-              --allowResign \
-              -a build/ninmods_loader_aligned.apk \
-              -o release_apk/
-            OUTPUT_APK=$(find release_apk -type f -name "*.apk" | grep -v idsig | head -n 1)
-            # Remove any .idsig files (prohibited by GEMINI.md)
-            find release_apk -name "*.idsig" -delete
-            # Keep ONLY the single official versioned loader APK
-            mv "$OUTPUT_APK" "release_apk/Loader_V${LOADER_VER}.apk"
-            # Clean all intermediate debug/signing files
-            rm -f release_apk/*aligned-debugSigned.apk release_apk/*.idsig 2>/dev/null || true
-          else
-            echo "Signing with debug keystore (fallback)..."
-            keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey \
-              -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-            jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore debug.keystore \
-              -storepass android build/ninmods_loader_aligned.apk androiddebugkey
-            mv build/ninmods_loader_aligned.apk "release_apk/Loader_V${LOADER_VER}.apk"
+          APKSIGNER=$(ls -1 "$ANDROID_HOME"/build-tools/*/apksigner 2>/dev/null | sort -V | tail -n 1 || true)
+          if [ -z "$APKSIGNER" ]; then
+            sudo apt-get update
+            sudo apt-get install -y apksigner
+            APKSIGNER=$(command -v apksigner)
+          fi
+          echo "Using apksigner: $APKSIGNER"
+          "$APKSIGNER" --version
+
+          OUT_APK="release_apk/Loader_V${LOADER_VER}.apk"
+          rm -f "$OUT_APK"
+
+          "$APKSIGNER" sign \
+            --ks signing/release.keystore \
+            --ks-key-alias "$RELEASE_KEY_ALIAS" \
+            --ks-pass env:RELEASE_KEYSTORE_PASSWORD \
+            --key-pass env:RELEASE_KEY_PASSWORD \
+            --v1-signing-enabled true \
+            --v2-signing-enabled true \
+            --v3-signing-enabled true \
+            --v4-signing-enabled false \
+            -v \
+            --out "$OUT_APK" \
+            build/ninmods_loader_aligned.apk
+
+          # v4 produces a .idsig sidecar file - prohibited by project rule 10.
+          find . -name "*.idsig" -delete
+
+          # Hard verification: v2 + v3 must actually be present.
+          "$APKSIGNER" verify -v --print-certs "$OUT_APK" | tee verify.txt
+          grep -qE "Verified using v2 scheme .*: true" verify.txt
+          grep -qE "Verified using v3 scheme .*: true" verify.txt
+          if grep -qi "CN=Android Debug" verify.txt; then
+            echo "::error::Release APK is signed with a DEBUG certificate. Aborting."
+            exit 1
           fi
           echo "=== Release APKs ==="
           ls -lh release_apk/

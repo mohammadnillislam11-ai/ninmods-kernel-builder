@@ -1493,7 +1493,7 @@
 .end method
 
 .method private synthetic lambda$executeDriver$15(Ljava/lang/String;Ljava/lang/String;)V
-    .locals 9
+    .locals 16
     .param p1, "path"    # Ljava/lang/String;
     .param p2, "type"    # Ljava/lang/String;
 
@@ -1501,6 +1501,20 @@
     const-string v0, "\n"
 
     :try_start_0
+    const-string v4, "'"
+    const-string v5, "'\\\''"
+    invoke-virtual {p1, v4, v5}, Ljava/lang/String;->replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+    move-result-object v5
+    new-instance v8, Ljava/lang/StringBuilder;
+    invoke-direct {v8}, Ljava/lang/StringBuilder;-><init>()V
+    invoke-virtual {v8, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v8
+    invoke-virtual {v8, v5}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v8
+    invoke-virtual {v8, v4}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v8
+    invoke-virtual {v8}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v8
     invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
 
     move-result-object v1
@@ -1510,6 +1524,14 @@
     invoke-virtual {v1, v2}, Ljava/lang/Runtime;->exec(Ljava/lang/String;)Ljava/lang/Process;
 
     move-result-object v1
+    new-instance v11, Lcom/ghost/driver/loader/StderrDrain;
+    invoke-virtual {v1}, Ljava/lang/Process;->getErrorStream()Ljava/io/InputStream;
+    move-result-object v4
+    invoke-direct {v11, v4}, Lcom/ghost/driver/loader/StderrDrain;-><init>(Ljava/io/InputStream;)V
+    new-instance v12, Ljava/lang/Thread;
+    const-string v4, "nin-su-stderr"
+    invoke-direct {v12, v11, v4}, Ljava/lang/Thread;-><init>(Ljava/lang/Runnable;Ljava/lang/String;)V
+    invoke-virtual {v12}, Ljava/lang/Thread;->start()V
 
     .line 540
     .local v1, "p":Ljava/lang/Process;
@@ -1533,7 +1555,7 @@
 
     move-result-object v3
 
-    invoke-virtual {v3, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v3, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object v3
 
@@ -1558,7 +1580,7 @@
 
     move-result-object v3
 
-    invoke-virtual {v3, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    invoke-virtual {v3, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
 
     move-result-object v3
 
@@ -1630,7 +1652,7 @@
 
     invoke-virtual {v2, v3}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 
-    const-string v3, "setenforce 0 2>/dev/null; for s in /sys/dev/char/*/uevent; do if [ -e \"$s\" ]; then dname=\"\"; maj=\"\"; min=\"\"; eval \"$(grep -E '^(MAJOR|MINOR|DEVNAME)=' \"$s\")\"; if [ -n \"$DEVNAME\" ] && [ -n \"$MAJOR\" ] && [ -n \"$MINOR\" ]; then [ ! -e \"/dev/$DEVNAME\" ] && mknod \"/dev/$DEVNAME\" c \"$MAJOR\" \"$MINOR\" 2>/dev/null; chmod 666 \"/dev/$DEVNAME\" 2>/dev/null; if [ \"$MAJOR\" -ge 200 ] && [ ! -e \"/dev/BYNb\" ]; then ln -sf \"/dev/$DEVNAME\" /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; fi; done; for s in /sys/class/*/*/dev; do if [ -e \"$s\" ]; then dname=$(echo \"$s\" | awk -F'/' '{print $(NF-1)}'); mm=$(cat \"$s\" 2>/dev/null); maj=$(echo \"$mm\" | cut -d: -f1); min=$(echo \"$mm\" | cut -d: -f2); if [ -n \"$maj\" ] && [ -n \"$min\" ]; then [ ! -e \"/dev/$dname\" ] && mknod \"/dev/$dname\" c \"$maj\" \"$min\" 2>/dev/null; chmod 666 \"/dev/$dname\" 2>/dev/null; if [ ! -e \"/dev/BYNb\" ]; then ln -sf \"/dev/$dname\" /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; fi; done; chmod 666 /dev/BYNb* /dev/mem_tool* /proc/uevents_records 2>/dev/null\n"
+    const-string v3, "OLD_SELINUX=$(getenforce 2>/dev/null); setenforce 0 2>/dev/null; for s in /sys/dev/char/*/uevent; do if [ -e \"$s\" ]; then dname=\"\"; maj=\"\"; min=\"\"; eval \"$(grep -E '^(MAJOR|MINOR|DEVNAME)=' \"$s\")\"; if [ -n \"$DEVNAME\" ] && [ -n \"$MAJOR\" ] && [ -n \"$MINOR\" ]; then [ ! -e \"/dev/$DEVNAME\" ] && mknod \"/dev/$DEVNAME\" c \"$MAJOR\" \"$MINOR\" 2>/dev/null; case \"$DEVNAME\" in BYNb|mem_tool|nh|wanbai) chmod 666 \"/dev/$DEVNAME\" 2>/dev/null;; esac; if [ \"$MAJOR\" -ge 200 ] && [ ! -e \"/dev/BYNb\" ]; then ln -sf \"/dev/$DEVNAME\" /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; fi; done; for s in /sys/class/*/*/dev; do if [ -e \"$s\" ]; then dname=$(echo \"$s\" | awk -F'/' '{print $(NF-1)}'); mm=$(cat \"$s\" 2>/dev/null); maj=$(echo \"$mm\" | cut -d: -f1); min=$(echo \"$mm\" | cut -d: -f2); if [ -n \"$maj\" ] && [ -n \"$min\" ]; then [ ! -e \"/dev/$dname\" ] && mknod \"/dev/$dname\" c \"$maj\" \"$min\" 2>/dev/null; case \"$dname\" in BYNb|mem_tool|nh|wanbai) chmod 666 \"/dev/$dname\" 2>/dev/null;; esac; if [ ! -e \"/dev/BYNb\" ]; then ln -sf \"/dev/$dname\" /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; fi; done; for n in /dev/BYNb /dev/mem_tool /dev/nh /dev/wanbai; do if [ -e \"$n\" ]; then chmod 666 \"$n\" 2>/dev/null; fi; done; if [ \"$OLD_SELINUX\" = \"Enforcing\" ]; then setenforce 1 2>/dev/null; fi; echo \"[NIN] SELinux now: $(getenforce 2>/dev/null)\"\n"
 
     invoke-virtual {v2, v3}, Ljava/io/DataOutputStream;->writeBytes(Ljava/lang/String;)V
 
@@ -1646,6 +1668,7 @@
 
     .line 545
     invoke-virtual {v2}, Ljava/io/DataOutputStream;->flush()V
+    invoke-virtual {v2}, Ljava/io/DataOutputStream;->close()V
 
     .line 547
     new-instance v3, Ljava/io/BufferedReader;
@@ -1689,7 +1712,22 @@
 
     .line 553
     :cond_0
-    invoke-virtual {v1}, Ljava/lang/Process;->waitFor()I
+    const-wide/16 v8, 0x1e
+    sget-object v10, Ljava/util/concurrent/TimeUnit;->SECONDS:Ljava/util/concurrent/TimeUnit;
+    invoke-virtual {v1, v8, v9, v10}, Ljava/lang/Process;->waitFor(JLjava/util/concurrent/TimeUnit;)Z
+    move-result v8
+    if-eqz v8, :wait_ok
+    invoke-virtual {v1}, Ljava/lang/Process;->destroyForcibly()Ljava/lang/Process;
+    move-result-object v8
+    const-string v8, "[NIN] TIMEOUT_FAILED: su did not finish within 30s, process destroyed\n"
+    invoke-virtual {v4, v8}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    const/4 v13, 0x1
+    goto :wait_done
+    :wait_ok
+    const/4 v13, 0x0
+    :wait_done
+    const-wide/16 v14, 0x7d0
+    invoke-virtual {v12, v14, v15}, Ljava/lang/Thread;->join(J)V
 
     .line 555
     invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
@@ -1751,7 +1789,32 @@
     .line 561
     .local v5, "success":Z
     :goto_1
+    if-eqz v13, :tflag_done
+    const/4 v5, 0x0
+    :tflag_done
     move-object v7, v0
+    if-nez v5, :show_stderr
+    goto :no_stderr
+    :show_stderr
+    invoke-virtual {v11}, Lcom/ghost/driver/loader/StderrDrain;->getText()Ljava/lang/String;
+    move-result-object v8
+    invoke-virtual {v8}, Ljava/lang/String;->isEmpty()Z
+    move-result v14
+    if-eqz v14, :no_stderr
+    new-instance v8, Ljava/lang/StringBuilder;
+    invoke-direct {v8}, Ljava/lang/StringBuilder;-><init>()V
+    invoke-virtual {v8, v7}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v8
+    const-string v14, "[NIN] STDERR:\n"
+    invoke-virtual {v8, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v8
+    invoke-virtual {v11}, Lcom/ghost/driver/loader/StderrDrain;->getText()Ljava/lang/String;
+    move-result-object v14
+    invoke-virtual {v8, v14}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    move-result-object v8
+    invoke-virtual {v8}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+    move-result-object v7
+    :no_stderr
 
     .line 562
     .local v7, "finalResult":Ljava/lang/String;
@@ -1854,7 +1917,7 @@
 .end method
 
 .method private synthetic lambda$executeDriverCheck$11()V
-    .locals 11
+    .locals 16
 
     .line 389
     const-string v0, "-c"
@@ -1862,7 +1925,7 @@
     const-string v1, "su"
 
     :try_start_0
-    const-string v2, "setenforce 0 2>/dev/null; for s in /sys/dev/char/*/uevent; do if [ -e \"$s\" ]; then dname=\"\"; maj=\"\"; min=\"\"; eval \"$(grep -E '^(MAJOR|MINOR|DEVNAME)=' \"$s\")\"; if [ -n \"$DEVNAME\" ] && [ -n \"$MAJOR\" ] && [ -n \"$MINOR\" ]; then [ ! -e \"/dev/$DEVNAME\" ] && mknod \"/dev/$DEVNAME\" c \"$MAJOR\" \"$MINOR\" 2>/dev/null; chmod 666 \"/dev/$DEVNAME\" 2>/dev/null; if [ \"$MAJOR\" -ge 200 ] && [ ! -e \"/dev/BYNb\" ]; then ln -sf \"/dev/$DEVNAME\" /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; fi; done; for s in /sys/class/*/*/dev; do if [ -e \"$s\" ]; then dname=$(echo \"$s\" | awk -F'/' '{print $(NF-1)}'); mm=$(cat \"$s\" 2>/dev/null); maj=$(echo \"$mm\" | cut -d: -f1); min=$(echo \"$mm\" | cut -d: -f2); if [ -n \"$maj\" ] && [ -n \"$min\" ]; then [ ! -e \"/dev/$dname\" ] && mknod \"/dev/$dname\" c \"$maj\" \"$min\" 2>/dev/null; chmod 666 \"/dev/$dname\" 2>/dev/null; if [ ! -e \"/dev/BYNb\" ]; then ln -sf \"/dev/$dname\" /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; fi; done; chmod 666 /dev/BYNb* /dev/mem_tool* /proc/uevents_records 2>/dev/null; NODES=''; for n in /dev/BYNb /dev/mem_tool /proc/uevents_records; do if [ -e \"$n\" ]; then NODES=\"$NODES $n\"; fi; done; for s in /sys/dev/char/*/uevent; do if [ -e \"$s\" ]; then dname=\"\"; eval \"$(grep '^DEVNAME=' \"$s\")\"; if [ -n \"$DEVNAME\" ] && [ -e \"/dev/$DEVNAME\" ]; then NODES=\"$NODES /dev/$DEVNAME\"; break; fi; fi; done; MODS=$(cat /proc/modules 2>/dev/null | grep -E \"BYNb|mem_tool|uevents|driver|nh|5.10\"); if [ -n \"$NODES\" ] || [ -n \"$MODS\" ]; then echo \"[+] ACTIVE DRIVER DETECTED\"; if [ -n \"$NODES\" ]; then echo \"[+] Device Endpoints:\"; ls -l $NODES; fi; if [ -n \"$MODS\" ]; then echo \"[+] Active Kernel Modules:\"; echo \"$MODS\" | head -n 5; fi; echo \"RESULT=DRIVER_ACTIVE\"; else echo \"[-] NO ACTIVE DRIVER FOUND\"; echo \"[-] Checked: /dev/BYNb, /dev/mem_tool, /proc/uevents_records\"; echo \"[-] Kernel Error Telemetry (dmesg):\"; dmesg 2>/dev/null | grep -iE \"module_sig|PKCS|disagree|vermagic|failed\" | tail -n 5; echo \"RESULT=DRIVER_INACTIVE\"; fi"
+    const-string v2, "OLD_SELINUX=$(getenforce 2>/dev/null); setenforce 0 2>/dev/null; for s in /sys/dev/char/*/uevent; do if [ -e \"$s\" ]; then dname=\"\"; maj=\"\"; min=\"\"; eval \"$(grep -E '^(MAJOR|MINOR|DEVNAME)=' \"$s\")\"; if [ -n \"$DEVNAME\" ] && [ -n \"$MAJOR\" ] && [ -n \"$MINOR\" ]; then [ ! -e \"/dev/$DEVNAME\" ] && mknod \"/dev/$DEVNAME\" c \"$MAJOR\" \"$MINOR\" 2>/dev/null; case \"$DEVNAME\" in BYNb|mem_tool|nh|wanbai) chmod 666 \"/dev/$DEVNAME\" 2>/dev/null;; esac; if [ \"$MAJOR\" -ge 200 ] && [ ! -e \"/dev/BYNb\" ]; then ln -sf \"/dev/$DEVNAME\" /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; fi; done; for s in /sys/class/*/*/dev; do if [ -e \"$s\" ]; then dname=$(echo \"$s\" | awk -F'/' '{print $(NF-1)}'); mm=$(cat \"$s\" 2>/dev/null); maj=$(echo \"$mm\" | cut -d: -f1); min=$(echo \"$mm\" | cut -d: -f2); if [ -n \"$maj\" ] && [ -n \"$min\" ]; then [ ! -e \"/dev/$dname\" ] && mknod \"/dev/$dname\" c \"$maj\" \"$min\" 2>/dev/null; case \"$dname\" in BYNb|mem_tool|nh|wanbai) chmod 666 \"/dev/$dname\" 2>/dev/null;; esac; if [ ! -e \"/dev/BYNb\" ]; then ln -sf \"/dev/$dname\" /dev/BYNb 2>/dev/null; chmod 666 /dev/BYNb 2>/dev/null; fi; fi; fi; done; for n in /dev/BYNb /dev/mem_tool /dev/nh /dev/wanbai; do if [ -e \"$n\" ]; then chmod 666 \"$n\" 2>/dev/null; fi; done; NODES=''; for n in /dev/BYNb /dev/mem_tool /proc/uevents_records; do if [ -e \"$n\" ]; then NODES=\"$NODES $n\"; fi; done; for s in /sys/dev/char/*/uevent; do if [ -e \"$s\" ]; then dname=\"\"; eval \"$(grep '^DEVNAME=' \"$s\")\"; if [ -n \"$DEVNAME\" ] && [ -e \"/dev/$DEVNAME\" ]; then NODES=\"$NODES /dev/$DEVNAME\"; break; fi; fi; done; MODS=$(cat /proc/modules 2>/dev/null | grep -E \"BYNb|mem_tool|uevents|driver|nh|5.10\"); if [ -n \"$NODES\" ] || [ -n \"$MODS\" ]; then echo \"[+] ACTIVE DRIVER DETECTED\"; if [ -n \"$NODES\" ]; then echo \"[+] Device Endpoints:\"; ls -l $NODES; fi; if [ -n \"$MODS\" ]; then echo \"[+] Active Kernel Modules:\"; echo \"$MODS\" | head -n 5; fi; echo \"RESULT=DRIVER_ACTIVE\"; else echo \"[-] NO ACTIVE DRIVER FOUND\"; echo \"[-] Checked: /dev/BYNb, /dev/mem_tool, /proc/uevents_records\"; echo \"[-] Kernel Error Telemetry (dmesg):\"; dmesg 2>/dev/null | grep -iE \"module_sig|PKCS|disagree|vermagic|failed\" | tail -n 5; echo \"RESULT=DRIVER_INACTIVE\"; fi; if [ \"$OLD_SELINUX\" = \"Enforcing\" ]; then setenforce 1 2>/dev/null; fi"
 
     invoke-static {}, Ljava/lang/Runtime;->getRuntime()Ljava/lang/Runtime;
 
@@ -1986,7 +2049,16 @@
 
     .line 434
     :cond_2
-    invoke-virtual {v0}, Ljava/lang/Process;->waitFor()I
+    const-wide/16 v11, 0x1e
+    sget-object v13, Ljava/util/concurrent/TimeUnit;->SECONDS:Ljava/util/concurrent/TimeUnit;
+    invoke-virtual {v0, v11, v12, v13}, Ljava/lang/Process;->waitFor(JLjava/util/concurrent/TimeUnit;)Z
+    move-result v11
+    if-eqz v11, :check_wait_ok
+    invoke-virtual {v0}, Ljava/lang/Process;->destroyForcibly()Ljava/lang/Process;
+    move-result-object v11
+    const-string v11, "[NIN] TIMEOUT_FAILED: driver check did not finish within 30s\n"
+    invoke-virtual {v6, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    :check_wait_ok
 
     .line 436
     invoke-virtual {v6}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
